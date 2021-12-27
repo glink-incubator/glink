@@ -1,0 +1,333 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\nThis Zepplin notebook shows how to do spatial filter with Glink SQL. Compared to `SpatialDataStream` API, Glink SQL can only do some simple spatial filter. For example, filter out the points within the rectangle.",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 16:42:49.079",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThis Zepplin notebook shows how to do spatial filter with Glink SQL. Compared to \u003ccode\u003eSpatialDataStream\u003c/code\u003e API, Glink SQL can only do some simple spatial filter. For example, filter out the points within the rectangle.\u003c/p\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642062914943_1696215658",
+      "id": "paragraph_1642062914943_1696215658",
+      "dateCreated": "2022-01-13 16:35:14.943",
+      "dateStarted": "2022-01-13 16:42:49.079",
+      "dateFinished": "2022-01-13 16:42:49.088",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%md\n# 1. Create T-Drive Input Table\nWithout losing generality, we use T-Drive data in Kafka as the data source. You can choose to import T-Drive data into Kafka yourself, but we also provide a simple script to do this. To use our script, you just need to run the following command. (Note: our script adds an ingest timestamp field at the end of each record, which you can simply ignore.)\n```shell\njava -cp glink-examples-xxx.jar TDriveProducer \\\n--tn 8 \\                          # threads to use\n--p /path/to/tdrive_merge.txt \\   # change this path for your macheine\n--t tdrive_input \\                # Kafka topic to write to\n--s localhost:9092                # Kafka broker server\n```",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 16:35:06.468",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e1. Create T-Drive Input Table\u003c/h1\u003e\n\u003cp\u003eWithout losing generality, we use T-Drive data in Kafka as the data source. You can choose to import T-Drive data into Kafka yourself, but we also provide a simple script to do this. To use our script, you just need to run the following command. (Note: our script adds an ingest timestamp field at the end of each record, which you can simply ignore.)\u003c/p\u003e\n\u003cpre\u003e\u003ccode class\u003d\"language-shell\"\u003ejava -cp glink-examples-xxx.jar TDriveProducer \\\n--tn 8 \\                          # threads to use\n--p /path/to/tdrive_merge.txt \\   # change this path for your macheine\n--t tdrive_input \\                # Kafka topic to write to\n--s localhost:9092                # Kafka broker server\n\u003c/code\u003e\u003c/pre\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642062507342_759960851",
+      "id": "paragraph_1642062507342_759960851",
+      "dateCreated": "2022-01-13 16:28:27.342",
+      "dateStarted": "2022-01-13 16:35:06.468",
+      "dateFinished": "2022-01-13 16:35:06.479",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nCREATE TABLE tdrive_input (\n    id STRING,\n    dtg TIMESTAMP(0),\n    lng DOUBLE NOT NULL,\n    lat DOUBLE NOT NULL,\n    input_time BIGINT\n) WITH (\n  \u0027connector\u0027 \u003d \u0027kafka\u0027,\n  \u0027topic\u0027 \u003d \u0027tdrive_input\u0027,\n  \u0027properties.bootstrap.servers\u0027 \u003d \u0027localhost:9092\u0027,\n  \u0027properties.group.id\u0027 \u003d \u0027testGroup\u0027,\n  \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n  \u0027format\u0027 \u003d \u0027csv\u0027\n)",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 16:22:23.569",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642058250646_533532955",
+      "id": "paragraph_1642058250646_533532955",
+      "dateCreated": "2022-01-13 15:17:30.646",
+      "dateStarted": "2022-01-13 15:40:22.580",
+      "dateFinished": "2022-01-13 15:40:22.767",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%md\n# 2. Create T-Drive Output Table\nCreate a table to store the T-Drive\u0027s filtered result.",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 16:23:44.571",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e2. Create T-Drive Output Table\u003c/h1\u003e\n\u003cp\u003eCreate a table to store the T-Drive\u0026rsquo;s filtered result.\u003c/p\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642062166017_1216095396",
+      "id": "paragraph_1642062166017_1216095396",
+      "dateCreated": "2022-01-13 16:22:46.017",
+      "dateStarted": "2022-01-13 16:23:44.571",
+      "dateFinished": "2022-01-13 16:23:44.578",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nCREATE TABLE tdrive_output (\n    id STRING,\n    dtg TIMESTAMP(0),\n    lng DOUBLE NOT NULL,\n    lat DOUBLE NOT NULL,\n    input_time BIGINT\n) WITH (\n  \u0027connector\u0027 \u003d \u0027kafka\u0027,\n  \u0027topic\u0027 \u003d \u0027tdrive_output\u0027,\n  \u0027properties.bootstrap.servers\u0027 \u003d \u0027localhost:9092\u0027,\n  \u0027properties.group.id\u0027 \u003d \u0027testGroup\u0027,\n  \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n  \u0027format\u0027 \u003d \u0027csv\u0027\n)",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 15:44:39.946",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642059824294_2138878708",
+      "id": "paragraph_1642059824294_2138878708",
+      "dateCreated": "2022-01-13 15:43:44.294",
+      "dateStarted": "2022-01-13 15:44:39.949",
+      "dateFinished": "2022-01-13 15:44:40.205",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%md\n# 3. Do Spatial Filter\nHere we do a rectangular spatial range filter. Polygon `POLYGON ((116.326655 39.859793, 116.316594 39.968705, 116.458598 39.974013, 116.462048 39.86954, 116.326655 39.859793))` is the approximate range of the third ring Road of Beijing.",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 16:26:08.586",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e3. Do Spatial Filter\u003c/h1\u003e\n\u003cp\u003eHere we do a rectangular spatial range filter. Polygon \u003ccode\u003ePOLYGON ((116.326655 39.859793, 116.316594 39.968705, 116.458598 39.974013, 116.462048 39.86954, 116.326655 39.859793))\u003c/code\u003e is the approximate range of the third ring Road of Beijing.\u003c/p\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642062227286_1876831332",
+      "id": "paragraph_1642062227286_1876831332",
+      "dateCreated": "2022-01-13 16:23:47.286",
+      "dateStarted": "2022-01-13 16:26:08.587",
+      "dateFinished": "2022-01-13 16:26:08.595",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\ninsert into tdrive_output\n    select * from tdrive \n    where ST_Contains(\n        ST_PolygonFromText(\u0027POLYGON ((116.326655 39.859793, 116.316594 39.968705, 116.458598 39.974013, 116.462048 39.86954, 116.326655 39.859793))\u0027), \n        ST_Point(lng, lat)\n    );",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 15:59:56.084",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "id": "string",
+                      "dtg": "string",
+                      "lng": "string",
+                      "lat": "string",
+                      "input_time": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642058344335_169014503",
+      "id": "paragraph_1642058344335_169014503",
+      "dateCreated": "2022-01-13 15:19:04.335",
+      "dateStarted": "2022-01-13 15:59:56.085",
+      "dateFinished": "2022-01-13 16:01:01.461",
+      "status": "ABORT"
+    }
+  ],
+  "name": "1.SpatialFilter",
+  "id": "2GUVGSM47",
+  "defaultInterpreterGroup": "flink",
+  "version": "0.10.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

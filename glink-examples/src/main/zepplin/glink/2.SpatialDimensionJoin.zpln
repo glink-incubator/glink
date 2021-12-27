@@ -1,0 +1,437 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\nThis Zepplin notebook shows how to do spatial dimension join with Glink SQL. Currently, Glink supports storing spatial dimension tables in the GeoMesa HBase Datastore.",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 17:21:54.107",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThis Zepplin notebook shows how to do spatial dimension join with Glink SQL. Currently, Glink supports storing spatial dimension tables in the GeoMesa HBase Datastore.\u003c/p\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642065605036_1016153797",
+      "id": "paragraph_1642065605036_1016153797",
+      "dateCreated": "2022-01-13 17:20:05.036",
+      "dateStarted": "2022-01-13 17:21:54.137",
+      "dateFinished": "2022-01-13 17:21:54.201",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%md\n# 1. Ctream T-Drive Input Table",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 17:22:09.263",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e1. Ctream T-Drive Input Table\u003c/h1\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642065715782_1577557109",
+      "id": "paragraph_1642065715782_1577557109",
+      "dateCreated": "2022-01-13 17:21:55.783",
+      "dateStarted": "2022-01-13 17:22:09.265",
+      "dateFinished": "2022-01-13 17:22:09.275",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nCREATE TABLE tdrive_input (\n    id STRING,\n    dtg TIMESTAMP(0),\n    lng DOUBLE NOT NULL,\n    lat DOUBLE NOT NULL,\n    input_time BIGINT,\n    proctime AS PROCTIME()\n) WITH (\n  \u0027connector\u0027 \u003d \u0027kafka\u0027,\n  \u0027topic\u0027 \u003d \u0027tdrive\u0027,\n  \u0027properties.bootstrap.servers\u0027 \u003d \u0027localhost:9092\u0027,\n  \u0027properties.group.id\u0027 \u003d \u0027testGroup1\u0027,\n  \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n  \u0027format\u0027 \u003d \u0027csv\u0027\n)",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 16:59:53.036",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642063898905_973254252",
+      "id": "paragraph_1642063898905_973254252",
+      "dateCreated": "2022-01-13 16:51:38.905",
+      "dateStarted": "2022-01-13 16:59:53.039",
+      "dateFinished": "2022-01-13 16:59:53.267",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%md\n# 2. Create T-Drive Output Table",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 17:22:30.526",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e2. Create T-Drive Output Table\u003c/h1\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642065732849_805886468",
+      "id": "paragraph_1642065732849_805886468",
+      "dateCreated": "2022-01-13 17:22:12.850",
+      "dateStarted": "2022-01-13 17:22:30.554",
+      "dateFinished": "2022-01-13 17:22:30.565",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nCREATE TABLE tdrive_output (\n    point_id STRING,\n    dtg TIMESTAMP(0),\n    lng DOUBLE NOT NULL,\n    lat DOUBLE NOT NULL,\n    area_id STRING,\n    name STRING\n) WITH (\n  \u0027connector\u0027 \u003d \u0027kafka\u0027,\n  \u0027topic\u0027 \u003d \u0027tdrive_output\u0027,\n  \u0027properties.bootstrap.servers\u0027 \u003d \u0027localhost:9092\u0027,\n  \u0027format\u0027 \u003d \u0027csv\u0027\n)",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 17:01:00.309",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642064265678_400086462",
+      "id": "paragraph_1642064265678_400086462",
+      "dateCreated": "2022-01-13 16:57:45.689",
+      "dateStarted": "2022-01-13 17:01:00.338",
+      "dateFinished": "2022-01-13 17:01:00.564",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%md\n# 3. Create GeoMesa Dimension Table\nWe use the administrative divisions of Beijing as a spatial dimension table, and each record in the table represents a district. We need to create the table in GeoMesa and import the corresponding data. To achieve this goal, we can perform the following steps.\n1. Create a GeoMesa table with cmd: `geomesa-hbase create-schema -c beijing-district -s \"pid:String,name:String,area:Polygon\" -f beijing-district`\n2. Ingest the beijing district data into geomesa: `geomesa-hbase ingest -c beijing-district -f beijing-district -C glink-examples/src/main/resources/data/beijing_district.conf glink-examples/src/resources/data/beijing_district.csv` (Note: the `beijing_district.conf` and `beijing_district.csv` are in the source code of glink)",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 17:30:18.329",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e3. Create GeoMesa Dimension Table\u003c/h1\u003e\n\u003cp\u003eWe use the administrative divisions of Beijing as a spatial dimension table, and each record in the table represents a district. We need to create the table in GeoMesa and import the corresponding data. To achieve this goal, we can perform the following steps.\u003c/p\u003e\n\u003col\u003e\n\u003cli\u003eCreate a GeoMesa table with cmd: \u003ccode\u003egeomesa-hbase create-schema -c beijing-district -s \u0026quot;pid:String,name:String,area:Polygon\u0026quot; -f beijing-district\u003c/code\u003e\u003c/li\u003e\n\u003cli\u003eIngest the beijing district data into geomesa: \u003ccode\u003egeomesa-hbase ingest -c beijing-district -f beijing-district -C glink-examples/src/main/resources/data/beijing_district.conf glink-examples/src/resources/data/beijing_district.csv\u003c/code\u003e (Note: the \u003ccode\u003ebeijing_district.conf\u003c/code\u003e and \u003ccode\u003ebeijing_district.csv\u003c/code\u003e are in the source code of glink)\u003c/li\u003e\n\u003c/ol\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642065755617_997853406",
+      "id": "paragraph_1642065755617_997853406",
+      "dateCreated": "2022-01-13 17:22:35.618",
+      "dateStarted": "2022-01-13 17:30:18.358",
+      "dateFinished": "2022-01-13 17:30:18.377",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\r\nCREATE TABLE beijing_district (\r\n    pid STRING,\r\n    name STRING,\r\n    area STRING,\r\n    PRIMARY KEY (pid) NOT ENFORCED)\r\nWITH (\r\n    \u0027connector\u0027 \u003d \u0027geomesa\u0027,\r\n    \u0027geomesa.data.store\u0027 \u003d \u0027hbase\u0027,\r\n    \u0027geomesa.schema.name\u0027 \u003d \u0027beijing-district\u0027,\r\n    \u0027geomesa.spatial.fields\u0027 \u003d \u0027area:Polygon\u0027,\r\n    \u0027geomesa.temporal.join.predict\u0027 \u003d \u0027I\u0027,\r\n    \u0027hbase.zookeepers\u0027 \u003d \u0027localhost:2181\u0027,\r\n    \u0027hbase.catalog\u0027 \u003d \u0027beijing-district\u0027\r\n);",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 16:49:01.598",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642062448645_1383114318",
+      "id": "paragraph_1642062448645_1383114318",
+      "dateCreated": "2022-01-13 16:27:28.645",
+      "dateStarted": "2022-01-13 16:49:01.602",
+      "dateFinished": "2022-01-13 16:49:02.155",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%md\n# 4. Do Spatial Dimension Join\nNow we can do spatial dimension join. This is actually some kind of look up join in Flink.",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 17:32:50.684",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e4. Do Spatial Dimension Join\u003c/h1\u003e\n\u003cp\u003eNow we can do spatial dimension join. This is actually some kind of look up join in Flink.\u003c/p\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642066235272_2027968825",
+      "id": "paragraph_1642066235272_2027968825",
+      "dateCreated": "2022-01-13 17:30:35.272",
+      "dateStarted": "2022-01-13 17:32:50.685",
+      "dateFinished": "2022-01-13 17:32:50.725",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nINSERT INTO tdrive_output\nSELECT A.id AS point_id, A.dtg, A.lng, A.lat, B.pid AS area_id, B.name\n    FROM tdrive_input AS A\n    LEFT JOIN beijing_district FOR SYSTEM_TIME AS OF A.proctime AS B\n    ON ST_AsText(ST_Point(A.lng, A.lat)) \u003d B.area;",
+      "user": "anonymous",
+      "dateUpdated": "2022-01-13 17:01:02.743",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {},
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "ANGULAR",
+            "data": "\u003ch1\u003eDuration: {{duration}} \u003c/h1\u003e\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "Fail to run sql command: INSERT INTO tdrive_output\nSELECT A.id AS point_id, A.dtg, A.lng, A.lat, B.pid AS area_id, B.name\n    FROM tdrive_input AS A\n    LEFT JOIN beijing_district FOR SYSTEM_TIME AS OF A.proctime AS B\n    ON ST_AsText(ST_Point(A.lng, A.lat)) \u003d B.area\njava.io.IOException: org.apache.flink.client.program.ProgramInvocationException: Job failed (JobID: df78ac0581e1d7b8039e973b4339bd89)\n\tat org.apache.zeppelin.flink.FlinkSqlInterpreter.callInsertInto(FlinkSqlInterpreter.java:550)\n\tat org.apache.zeppelin.flink.FlinkStreamSqlInterpreter.callInsertInto(FlinkStreamSqlInterpreter.java:94)\n\tat org.apache.zeppelin.flink.FlinkSqlInterpreter.callCommand(FlinkSqlInterpreter.java:264)\n\tat org.apache.zeppelin.flink.FlinkSqlInterpreter.runSqlList(FlinkSqlInterpreter.java:151)\n\tat org.apache.zeppelin.flink.FlinkSqlInterpreter.internalInterpret(FlinkSqlInterpreter.java:109)\n\tat org.apache.zeppelin.interpreter.AbstractInterpreter.interpret(AbstractInterpreter.java:55)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:110)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:849)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:741)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler.lambda$runJobInScheduler$0(ParallelScheduler.java:46)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: org.apache.flink.client.program.ProgramInvocationException: Job failed (JobID: df78ac0581e1d7b8039e973b4339bd89)\n\tat org.apache.flink.client.deployment.ClusterClientJobClientAdapter.lambda$null$6(ClusterClientJobClientAdapter.java:125)\n\tat java.util.concurrent.CompletableFuture.uniApply(CompletableFuture.java:616)\n\tat java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:591)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:488)\n\tat java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:1975)\n\tat org.apache.flink.runtime.concurrent.FutureUtils.lambda$retryOperationWithDelay$9(FutureUtils.java:394)\n\tat java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:774)\n\tat java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:750)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:488)\n\tat java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:1975)\n\tat org.apache.flink.client.program.rest.RestClusterClient.lambda$pollResourceAsync$24(RestClusterClient.java:670)\n\tat java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:774)\n\tat java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:750)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:488)\n\tat java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:1975)\n\tat org.apache.flink.runtime.concurrent.FutureUtils.lambda$retryOperationWithDelay$9(FutureUtils.java:394)\n\tat java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:774)\n\tat java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:750)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:488)\n\tat java.util.concurrent.CompletableFuture.postFire(CompletableFuture.java:575)\n\tat java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:943)\n\tat java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:456)\n\t... 3 more\nCaused by: org.apache.flink.runtime.client.JobCancellationException: Job was cancelled.\n\tat org.apache.flink.runtime.jobmaster.JobResult.toJobExecutionResult(JobResult.java:146)\n\tat org.apache.flink.client.deployment.ClusterClientJobClientAdapter.lambda$null$6(ClusterClientJobClientAdapter.java:123)\n\t... 24 more\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "false#/job/df78ac0581e1d7b8039e973b4339bd89"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1642063741600_935080386",
+      "id": "paragraph_1642063741600_935080386",
+      "dateCreated": "2022-01-13 16:49:01.600",
+      "dateStarted": "2022-01-13 17:01:02.764",
+      "dateFinished": "2022-01-13 17:01:39.419",
+      "status": "ABORT"
+    }
+  ],
+  "name": "2.SpatialDimensionJoin",
+  "id": "2GTZ56CU8",
+  "defaultInterpreterGroup": "flink",
+  "version": "0.10.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

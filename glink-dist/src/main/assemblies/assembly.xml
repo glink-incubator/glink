@@ -1,0 +1,52 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
+		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		  xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
+	<id>bin</id>
+	<formats>
+		<format>tar.gz</format>
+	</formats>
+
+	<files>
+		<file>
+			<source>../README.md</source>
+			<outputDirectory>.</outputDirectory>
+		</file>
+	</files>
+
+	<fileSets>
+		<fileSet>
+			<directory>../glink-examples/src/main/zepplin/glink</directory>
+			<includes>
+				<include>*.zpln</include>
+			</includes>
+			<outputDirectory>examples/zepplin</outputDirectory>
+		</fileSet>
+	</fileSets>
+
+	<moduleSets>
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+			<includes>
+				<include>cn.edu.whu:glink-core</include>
+				<include>cn.edu.whu:glink-sql</include>
+				<include>cn.edu.whu:glink-connector-geomesa</include>
+			</includes>
+			<binaries>
+				<outputDirectory>lib</outputDirectory>
+				<includeDependencies>false</includeDependencies>
+				<unpack>false</unpack>
+            </binaries>
+		</moduleSet>
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+			<includes>
+				<include>cn.edu.whu:glink-examples</include>
+			</includes>
+			<binaries>
+				<outputDirectory>examples</outputDirectory>
+				<includeDependencies>false</includeDependencies>
+				<unpack>false</unpack>
+			</binaries>
+		</moduleSet>
+	</moduleSets>
+</assembly>
