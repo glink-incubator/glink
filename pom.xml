@@ -5,7 +5,7 @@
     <groupId>cn.edu.whu</groupId>
     <artifactId>glink-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.2-SNAPSHOT</version>
 
     <modules>
         <module>glink-core</module>
@@ -42,7 +42,7 @@
         <url>https://github.com/glink-incubator/glink</url>
         <connection>git@github.com:glink-incubator/glink.git</connection>
         <developerConnection>scm:git:git@github.com:glink-incubator/glink.git</developerConnection>
-        <tag>release-1.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <dependencyManagement>
