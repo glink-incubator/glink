@@ -18,7 +18,7 @@ import java.util.List;
  *
  * <p>
  * Input line with format (id,lng,lat), below is an example:
- * 1,114.35,34.50
+ * <li> 1,114.35,34.50 </li>
  *
  * @author Yu Liebing
  * */
