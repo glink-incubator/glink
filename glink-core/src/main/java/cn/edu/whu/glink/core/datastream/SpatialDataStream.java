@@ -8,6 +8,7 @@ import cn.edu.whu.glink.core.distance.DistanceCalculator;
 import cn.edu.whu.glink.core.enums.GeometryType;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.*;
+import org.apache.flink.api.connector.source.Source;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.streaming.api.datastream.*;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -65,6 +66,15 @@ public class SpatialDataStream<T extends Geometry> {
   public static WKBWriter wkbWriter = new WKBWriter();
 
   protected SpatialDataStream() { }
+
+  public SpatialDataStream(final StreamExecutionEnvironment env,
+                           final Source<T, ?, ?> source,
+                           WatermarkStrategy<T> watermarkStrategy,
+                           String sourceName) {
+    this.env = env;
+    spatialDataStream = env
+            .fromSource(source, watermarkStrategy, sourceName);
+  }
 
   public SpatialDataStream(final StreamExecutionEnvironment env,
                            final SourceFunction<T> sourceFunction) {

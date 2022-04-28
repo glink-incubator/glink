@@ -1,7 +1,9 @@
 package cn.edu.whu.glink.core.datastream;
 
+import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.connector.source.Source;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -14,6 +16,13 @@ import org.locationtech.jts.geom.Geometry;
 public class BroadcastSpatialDataStream<T extends Geometry> {
 
   private final DataStream<Tuple2<Boolean, T>> dataStream;
+
+  public BroadcastSpatialDataStream(final StreamExecutionEnvironment env,
+                                    final Source<Tuple2<Boolean, T>, ?, ?> source,
+                                    WatermarkStrategy<Tuple2<Boolean, T>> watermarkStrategy,
+                                    String sourceName) {
+    dataStream = env.fromSource(source, watermarkStrategy, sourceName);
+  }
 
   public BroadcastSpatialDataStream(final StreamExecutionEnvironment env,
                                     final SourceFunction<Tuple2<Boolean, T>> sourceFunction) {
