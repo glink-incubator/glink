@@ -41,14 +41,13 @@ public class TDriveSpatialWindowKNN {
     FlinkKafkaConsumer<Point2> kafkaConsumer = new FlinkKafkaConsumer<>(
             inputTopic, new TDriveDeserializer(), properties);
     kafkaConsumer.setStartFromEarliest();
+    kafkaConsumer.assignTimestampsAndWatermarks(WatermarkStrategy
+            .<Point2>forMonotonousTimestamps()
+            .withTimestampAssigner((p, time) -> p.getTimestamp()));
     // do the knn
     // location of Tian an men Square
     Point queryPoint = SpatialDataStream.geometryFactory.createPoint(new Coordinate(116.403963, 39.915119));
     SpatialDataStream<Point2> tDriveStream = new SpatialDataStream<>(env, kafkaConsumer);
-    tDriveStream.assignTimestampsAndWatermarks(
-            WatermarkStrategy
-                    .<Point2>forMonotonousTimestamps()
-                    .withTimestampAssigner((p, time) -> p.getTimestamp()));
     DataStream<Point2> knnStream = SpatialWindowKNN.knn(
             tDriveStream,
             queryPoint,

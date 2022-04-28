@@ -48,10 +48,11 @@ public class TDriveWindowDBSCAN {
     FlinkKafkaConsumer<Point2> kafkaConsumer = new FlinkKafkaConsumer<>(
             inputTopic, new TDriveDeserializer(true), properties);
     kafkaConsumer.setStartFromEarliest();
-    SpatialDataStream<Point2> pointStream = new SpatialDataStream<>(env, kafkaConsumer)
-            .assignTimestampsAndWatermarks(WatermarkStrategy
-                    .<Point2>forMonotonousTimestamps()
-                    .withTimestampAssigner((p, time) -> p.getTimestamp()));
+    kafkaConsumer.assignTimestampsAndWatermarks(WatermarkStrategy
+            .<Point2>forMonotonousTimestamps()
+            .withTimestampAssigner((p, time) -> p.getTimestamp()));
+
+    SpatialDataStream<Point2> pointStream = new SpatialDataStream<>(env, kafkaConsumer);
 
     DataStream<Tuple2<Integer, List<Point2>>> dbscanStream = WindowDBSCAN.dbscan(
             pointStream,

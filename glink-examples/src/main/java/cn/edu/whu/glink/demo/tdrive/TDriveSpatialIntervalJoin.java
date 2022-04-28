@@ -46,16 +46,16 @@ public class TDriveSpatialIntervalJoin {
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
     props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
+    FlinkKafkaConsumer<Point2> kafkaConsumer = new FlinkKafkaConsumer<>(
+            inputTopic, new TDriveDeserializer(), props);
+    kafkaConsumer.assignTimestampsAndWatermarks(WatermarkStrategy
+            .<Point2>forMonotonousTimestamps()
+            .withTimestampAssigner((p, time) -> p.getTimestamp()));
+
     SpatialDataStream<Point2> trajectoryStream1 = new SpatialDataStream<>(
-            env, new FlinkKafkaConsumer<>(inputTopic, new TDriveDeserializer(), props))
-            .assignTimestampsAndWatermarks(WatermarkStrategy
-                    .<Point2>forMonotonousTimestamps()
-                    .withTimestampAssigner((p, time) -> p.getTimestamp()));
+            env, new FlinkKafkaConsumer<>(inputTopic, new TDriveDeserializer(), props));
     SpatialDataStream<Point2> trajectoryStream2 = new SpatialDataStream<>(
-            env, new FlinkKafkaConsumer<>(inputTopic, new TDriveDeserializer(), props))
-            .assignTimestampsAndWatermarks(WatermarkStrategy
-                    .<Point2>forMonotonousTimestamps()
-                    .withTimestampAssigner((p, time) -> p.getTimestamp()));
+            env, new FlinkKafkaConsumer<>(inputTopic, new TDriveDeserializer(), props));
 
     DataStream<Tuple2<Point2, Point2>> joinStream = SpatialIntervalJoin.join(
             trajectoryStream1,
