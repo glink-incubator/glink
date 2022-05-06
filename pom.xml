@@ -16,7 +16,7 @@
     </modules>
 
     <properties>
-        <flink.version>1.13.3</flink.version>
+        <flink.version>1.14.4</flink.version>
         <kafka.version>2.4.1</kafka.version>
         <avro.version>1.8.2</avro.version>
         <bijection.version>0.9.7</bijection.version>
@@ -42,7 +42,7 @@
         <url>https://github.com/glink-incubator/glink</url>
         <connection>git@github.com:glink-incubator/glink.git</connection>
         <developerConnection>scm:git:git@github.com:glink-incubator/glink.git</developerConnection>
-        <tag>release-1.0.1-1.13</tag>
+        <tag>release-1.0.1-1.14</tag>
     </scm>
 
     <dependencyManagement>
@@ -125,18 +125,6 @@
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-table-planner_${scala.binary.version}</artifactId>
                 <version>${flink.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.flink</groupId>
-                <artifactId>flink-table-planner-blink_${scala.binary.version}</artifactId>
-                <version>${flink.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>slf4j-api</artifactId>
-                        <groupId>org.slf4j</groupId>
-                    </exclusion>
-                </exclusions>
                 <scope>provided</scope>
             </dependency>
             <dependency>
