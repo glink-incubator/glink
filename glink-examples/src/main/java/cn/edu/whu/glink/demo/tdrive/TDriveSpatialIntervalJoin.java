@@ -53,9 +53,9 @@ public class TDriveSpatialIntervalJoin {
             .withTimestampAssigner((p, time) -> p.getTimestamp()));
 
     SpatialDataStream<Point2> trajectoryStream1 = new SpatialDataStream<>(
-            env, new FlinkKafkaConsumer<>(inputTopic, new TDriveDeserializer(), props));
+            env, kafkaConsumer);
     SpatialDataStream<Point2> trajectoryStream2 = new SpatialDataStream<>(
-            env, new FlinkKafkaConsumer<>(inputTopic, new TDriveDeserializer(), props));
+            env, kafkaConsumer);
 
     DataStream<Tuple2<Point2, Point2>> joinStream = SpatialIntervalJoin.join(
             trajectoryStream1,
