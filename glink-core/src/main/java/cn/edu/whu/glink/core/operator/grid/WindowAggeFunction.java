@@ -51,7 +51,7 @@ public class WindowAggeFunction {
     private final int weightIndex;
     Double weight;
 
-    public WindowAggregate(TileFlatMapType tileFlatMapType, SmoothOperatorType smoothOperator,int carIDIndex, int weightIndex) {
+    public WindowAggregate(TileFlatMapType tileFlatMapType, SmoothOperatorType smoothOperator, int carIDIndex, int weightIndex) {
       this.tileFlatMapType = tileFlatMapType;
       this.smoothOperator = smoothOperator;
       this.carIDIndex = carIDIndex;
@@ -197,20 +197,20 @@ public class WindowAggeFunction {
         PixelResult<V> pixelValue = tileResultTileTuple2.f0.getGridResultList().get(i);
         int pixelY = pixelValue.getPixel().getPixelY();
         int pixelX = pixelValue.getPixel().getPixelX();
-        if (((double) lowTile.getY() / 2) - upperTile.getY() == 0 &
-            ((double) lowTile.getX() / 2 - upperTile.getX() == 0)) {
+        if (((double) lowTile.getY() / 2) - upperTile.getY() == 0
+            & ((double) lowTile.getX() / 2 - upperTile.getX() == 0)) {
           newPixelX = pixelX / 2;
           newPixelY = pixelY / 2;
-        } else if (((double) lowTile.getY() / 2) - upperTile.getY() > 0 &
-            ((double) lowTile.getX() / 2 - upperTile.getX() == 0)) {
+        } else if (((double) lowTile.getY() / 2) - upperTile.getY() > 0
+            & ((double) lowTile.getX() / 2 - upperTile.getX() == 0)) {
           newPixelX = pixelX / 2;
           newPixelY = pixelY / 2 + 128;
-        } else if (((double) lowTile.getY() / 2) - upperTile.getY() == 0 &
-            ((double) lowTile.getX() / 2 - upperTile.getX() > 0)) {
+        } else if (((double) lowTile.getY() / 2) - upperTile.getY() == 0
+            & ((double) lowTile.getX() / 2 - upperTile.getX() > 0)) {
           newPixelX = pixelX / 2 + 128;
           newPixelY = pixelY / 2;
-        } else if (((double) lowTile.getY() / 2) - upperTile.getY() > 0 &
-            ((double) lowTile.getX() / 2 - upperTile.getX() > 0)) {
+        } else if (((double) lowTile.getY() / 2) - upperTile.getY() > 0
+            & ((double) lowTile.getX() / 2 - upperTile.getX() > 0)) {
           newPixelX = pixelX / 2 + 128;
           newPixelY = pixelY / 2 + 128;
         }

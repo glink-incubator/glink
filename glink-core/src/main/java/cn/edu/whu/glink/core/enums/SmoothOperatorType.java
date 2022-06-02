@@ -17,8 +17,8 @@ public enum SmoothOperatorType {
     return length;
   }
 
-  public static Map<Tuple2<Integer,Integer>,Double> getMapOperator(SmoothOperatorType smoothoperatorType) {
-    HashMap<Tuple2<Integer,Integer>,Double> hashMap = new HashMap<>();
+  public static Map<Tuple2<Integer, Integer>, Double> getMapOperator(SmoothOperatorType smoothoperatorType) {
+    HashMap<Tuple2<Integer, Integer>, Double> hashMap = new HashMap<>();
     switch (smoothoperatorType) {
       case GaussianBlur:
         length = 5;

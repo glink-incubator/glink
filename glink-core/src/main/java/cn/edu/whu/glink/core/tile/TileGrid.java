@@ -17,11 +17,11 @@ public class TileGrid {
   }
 
   public Tile getTile(Geometry geometry) {
-    double[] pointXY= getPointCoordinate(geometry);
+    double[] pointXY = getPointCoordinate(geometry);
     return getTile(pointXY[0], pointXY[1]);
   }
   public Pixel getPixel(Geometry geometry) {
-    double[] pointXY= getPointCoordinate(geometry);
+    double[] pointXY = getPointCoordinate(geometry);
     return getPixel(pointXY[0], pointXY[1]);
   }
 
