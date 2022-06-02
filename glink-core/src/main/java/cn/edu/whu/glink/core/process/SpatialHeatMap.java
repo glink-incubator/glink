@@ -28,7 +28,7 @@ public class SpatialHeatMap {
                 tileGridDataStream.getSmoothOperator(), carIDIndex, weightIndex),
             new WindowAggeFunction.AddWindowTime<>());
 
-    TileGridDataStream<T, V> tileGridDataStream1 = new <W>TileGridDataStream(
+    TileGridDataStream<T, V> tileGridDataStream1 = new<W> TileGridDataStream(
         tileGridDataStream.tileLevel,
         tileGridDataStream.getTileFlatMapType(),
         tileGridDataStream.getPyramidTileAggregateType(),
