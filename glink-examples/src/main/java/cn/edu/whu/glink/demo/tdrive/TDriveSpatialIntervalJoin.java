@@ -27,47 +27,47 @@ import java.util.Properties;
  * There should be two different streams in a real-world scenario.
  *
  * @author Yu Liebing
- * */
+ */
 public class TDriveSpatialIntervalJoin {
 
-  public static void main(String[] args) throws Exception {
-    ParameterTool parameterTool = ParameterTool.fromArgs(args);
-    String bootstrapServer = parameterTool.get("bootstrap.server");
-    String inputTopic = parameterTool.get("input.topic");
-    String outputTopic = parameterTool.get("output.topic");
-    double distance = Double.parseDouble(parameterTool.get("distance"));
-    int leftBound = Integer.parseInt(parameterTool.get("left.bound"));
-    int rightBound = Integer.parseInt(parameterTool.get("right.bound"));
+    public static void main(String[] args) throws Exception {
+        ParameterTool parameterTool = ParameterTool.fromArgs(args);
+        String bootstrapServer = parameterTool.get("bootstrap.server");
+        String inputTopic = parameterTool.get("input.topic");
+        String outputTopic = parameterTool.get("output.topic");
+        double distance = Double.parseDouble(parameterTool.get("distance"));
+        int leftBound = Integer.parseInt(parameterTool.get("left.bound"));
+        int rightBound = Integer.parseInt(parameterTool.get("right.bound"));
+        int gridSplit = Integer.parseInt(parameterTool.get("grid.split"));
+        Envelope beijingBound = new Envelope(115.41, 117.51, 39.44, 41.06);
+        SpatialDataStream.gridIndex = new GeographicalGridIndex(beijingBound, gridSplit, gridSplit);
+        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        Properties props = new Properties();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-    Envelope beijingBound = new Envelope(115.41, 117.51, 39.44, 41.06);
-    SpatialDataStream.gridIndex = new GeographicalGridIndex(beijingBound, 5, 5);
-    final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-    Properties props = new Properties();
-    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
-    props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        FlinkKafkaConsumer<Point2> kafkaConsumer = new FlinkKafkaConsumer<>(
+                inputTopic, new TDriveDeserializer(), props);
+        kafkaConsumer.assignTimestampsAndWatermarks(WatermarkStrategy
+                .<Point2>forMonotonousTimestamps()
+                .withTimestampAssigner((p, time) -> p.getTimestamp()));
 
-    FlinkKafkaConsumer<Point2> kafkaConsumer = new FlinkKafkaConsumer<>(
-            inputTopic, new TDriveDeserializer(), props);
-    kafkaConsumer.assignTimestampsAndWatermarks(WatermarkStrategy
-            .<Point2>forMonotonousTimestamps()
-            .withTimestampAssigner((p, time) -> p.getTimestamp()));
+        SpatialDataStream<Point2> trajectoryStream1 = new SpatialDataStream<>(
+                env, kafkaConsumer);
+        SpatialDataStream<Point2> trajectoryStream2 = new SpatialDataStream<>(
+                env, kafkaConsumer);
 
-    SpatialDataStream<Point2> trajectoryStream1 = new SpatialDataStream<>(
-            env, kafkaConsumer);
-    SpatialDataStream<Point2> trajectoryStream2 = new SpatialDataStream<>(
-            env, kafkaConsumer);
+        DataStream<Tuple2<Point2, Point2>> joinStream = SpatialIntervalJoin.join(
+                trajectoryStream1,
+                trajectoryStream2,
+                TopologyType.WITHIN_DISTANCE.distance(distance),
+                Time.seconds(-leftBound),
+                Time.seconds(rightBound));
+        // add sink
+        FlinkKafkaProducer<Tuple2<Point2, Point2>> kafkaProducer = new FlinkKafkaProducer<>(
+                outputTopic, new TDriveJoinSerializer(outputTopic), props, FlinkKafkaProducer.Semantic.AT_LEAST_ONCE);
+        joinStream.addSink(kafkaProducer);
 
-    DataStream<Tuple2<Point2, Point2>> joinStream = SpatialIntervalJoin.join(
-            trajectoryStream1,
-            trajectoryStream2,
-            TopologyType.WITHIN_DISTANCE.distance(distance),
-            Time.seconds(-leftBound),
-            Time.seconds(rightBound));
-    // add sink
-    FlinkKafkaProducer<Tuple2<Point2, Point2>> kafkaProducer = new FlinkKafkaProducer<>(
-            outputTopic, new TDriveJoinSerializer(outputTopic), props, FlinkKafkaProducer.Semantic.AT_LEAST_ONCE);
-    joinStream.addSink(kafkaProducer);
-
-    env.execute("T-Drive Spatial Interval Join");
-  }
+        env.execute("T-Drive Spatial Interval Join");
+    }
 }

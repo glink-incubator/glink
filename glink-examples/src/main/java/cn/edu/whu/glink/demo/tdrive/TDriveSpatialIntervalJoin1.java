@@ -4,7 +4,7 @@ import cn.edu.whu.glink.core.datastream.SpatialDataStream;
 import cn.edu.whu.glink.core.enums.TopologyType;
 import cn.edu.whu.glink.core.geom.Point2;
 import cn.edu.whu.glink.core.index.GeographicalGridIndex;
-import cn.edu.whu.glink.core.process.SpatialWindowJoin;
+import cn.edu.whu.glink.core.process.SpatialIntervalJoinInit;
 import cn.edu.whu.glink.demo.tdrive.kafka.TDriveDeserializer;
 import cn.edu.whu.glink.demo.tdrive.kafka.TDriveJoinSerializer;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
@@ -12,7 +12,6 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
@@ -23,13 +22,11 @@ import org.locationtech.jts.geom.Envelope;
 import java.util.Properties;
 
 /**
- * A demo of how to perform spatial window join on t-drive dataset.
- * For simplicity, here we let t-drive's trajectory point itself with its own jon.
- * There should be two different streams in a real-world scenario.
+ * spatial interval join with flink origin api
  *
- * @author Yu Liebing
+ * @author Lynn Lee
  */
-public class TDriveSpatialWindowJoin {
+public class TDriveSpatialIntervalJoin1 {
 
     public static void main(String[] args) throws Exception {
         ParameterTool parameterTool = ParameterTool.fromArgs(args);
@@ -37,11 +34,13 @@ public class TDriveSpatialWindowJoin {
         String inputTopic = parameterTool.get("input.topic");
         String outputTopic = parameterTool.get("output.topic");
         double distance = Double.parseDouble(parameterTool.get("distance"));
-        int windowSize = Integer.parseInt(parameterTool.get("window.size"));
-        int gridSplit = Integer.parseInt(parameterTool.get("grid.split"));
-
+        int leftBound = Integer.parseInt(parameterTool.get("left.bound"));
+        int rightBound = Integer.parseInt(parameterTool.get("right.bound"));
+//        int gridSplit = Integer.parseInt(parameterTool.get("grid.split"));
         Envelope beijingBound = new Envelope(115.41, 117.51, 39.44, 41.06);
-        SpatialDataStream.gridIndex = new GeographicalGridIndex(beijingBound, gridSplit, gridSplit);
+
+        SpatialDataStream.gridIndex = new GeographicalGridIndex(beijingBound, 1, 1);
+
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
@@ -53,19 +52,22 @@ public class TDriveSpatialWindowJoin {
                 .<Point2>forMonotonousTimestamps()
                 .withTimestampAssigner((p, time) -> p.getTimestamp()));
 
-        SpatialDataStream<Point2> tDriveStream1 = new SpatialDataStream<>(env, kafkaConsumer);
-        SpatialDataStream<Point2> tDriveStream2 = new SpatialDataStream<>(env, kafkaConsumer);
+        SpatialDataStream<Point2> trajectoryStream1 = new SpatialDataStream<>(
+                env, kafkaConsumer);
+        SpatialDataStream<Point2> trajectoryStream2 = new SpatialDataStream<>(
+                env, kafkaConsumer);
 
-        DataStream<Tuple2<Point2, Point2>> dataStream = SpatialWindowJoin.join(
-                tDriveStream1,
-                tDriveStream2,
+        DataStream<Tuple2<Point2, Point2>> joinStream = SpatialIntervalJoinInit.join(
+                trajectoryStream1,
+                trajectoryStream2,
                 TopologyType.WITHIN_DISTANCE.distance(distance),
-                TumblingEventTimeWindows.of(Time.seconds(windowSize)));
+                Time.seconds(-leftBound),
+                Time.seconds(rightBound));
         // add sink
         FlinkKafkaProducer<Tuple2<Point2, Point2>> kafkaProducer = new FlinkKafkaProducer<>(
                 outputTopic, new TDriveJoinSerializer(outputTopic), props, FlinkKafkaProducer.Semantic.AT_LEAST_ONCE);
-        dataStream.addSink(kafkaProducer);
+        joinStream.addSink(kafkaProducer);
 
-        env.execute("T-Drive Spatial Window Join");
+        env.execute("T-Drive Spatial Interval Join");
     }
 }
