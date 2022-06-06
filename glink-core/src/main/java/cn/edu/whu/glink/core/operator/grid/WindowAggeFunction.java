@@ -1,6 +1,5 @@
 package cn.edu.whu.glink.core.operator.grid;
 
-import cn.edu.whu.glink.core.datastream.TileGridDataStream;
 import cn.edu.whu.glink.core.enums.PyramidTileAggregateType;
 import cn.edu.whu.glink.core.enums.SmoothOperatorType;
 import cn.edu.whu.glink.core.enums.TileFlatMapType;
@@ -68,6 +67,132 @@ public class WindowAggeFunction {
         Tuple2<Pixel, T> inPixel, Map<Pixel, Tuple3<Double, HashSet<String>, Integer>> pixelIntegerMap) {
       Pixel pixel = inPixel.f0;
       String carNo = ((Tuple) inPixel.f1.getUserData()).getField(carIDIndex);
+      if (weightIndex >= 0) {
+        weight = Double.parseDouble(((Tuple) inPixel.f1.getUserData()).getField(weightIndex));
+      } else {
+        weight = 1.0;
+      }
+      try {
+        if (!pixelIntegerMap.containsKey(pixel)) {
+          HashSet<String> carNos = new HashSet<>();
+          carNos.add(carNo);
+          pixelIntegerMap.put(pixel, new Tuple3<>(weight, carNos, 1));
+        } else if (!pixelIntegerMap.get(pixel).f1.contains(carNo)) {
+          pixelIntegerMap.get(pixel).f1.add(carNo);
+          switch (tileFlatMapType) {
+            case MAX:
+              pixelIntegerMap.get(pixel).f0 = Math.max(pixelIntegerMap.get(pixel).f0, weight);
+              break;
+            case MIN:
+              pixelIntegerMap.get(pixel).f0 = Math.min(pixelIntegerMap.get(pixel).f0, weight);
+              break;
+            case COUNT:
+              pixelIntegerMap.get(pixel).f0 = 1.0;
+              break;
+            case AVG:
+            case SUM:
+              pixelIntegerMap.get(pixel).f0 = pixelIntegerMap.get(pixel).f0 + weight;
+              pixelIntegerMap.get(pixel).f2++;
+              break;
+            default:
+              throw new IllegalArgumentException("Illegal tileFlatMap type");
+          }
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      return pixelIntegerMap;
+    }
+
+    @Override
+    public TileResult<V> getResult(Map<Pixel, Tuple3<Double, HashSet<String>, Integer>> pixelIntegerMap) {
+      TileResult<V> ret = new TileResult<>();
+      Map<Pixel, Double> temple = new HashMap<>();
+      ret.setTile(pixelIntegerMap.keySet().iterator().next().getTile());
+      for (Map.Entry<Pixel, Tuple3<Double, HashSet<String>, Integer>> entry : pixelIntegerMap.entrySet()) {
+        double finalValue;
+        if (tileFlatMapType == TileFlatMapType.AVG) {
+          finalValue = entry.getValue().f0 / entry.getValue().f2;
+        } else {
+          finalValue = entry.getValue().f0;
+        }
+        temple.put(entry.getKey(), finalValue);
+      }
+      if (smoothOperator != null) {
+        Map<Tuple2<Integer, Integer>, Double> mapOperator = SmoothOperatorType.
+            getMapOperator(smoothOperator);
+        Double defineValue = 0.0;
+        for (Map.Entry<Pixel, Double> pixelDoubleEntry : temple.entrySet()) {
+          if (pixelDoubleEntry.getKey().getPixelX() >= (SmoothOperatorType.getLength() / 2)
+              && (pixelDoubleEntry.getKey().getPixelX() <= 255 - (SmoothOperatorType.getLength() / 2))
+              && (pixelDoubleEntry.getKey().getPixelY() >= (SmoothOperatorType.getLength() / 2))
+              && (pixelDoubleEntry.getKey().getPixelY() <= 255 - (SmoothOperatorType.getLength() / 2))) {
+            for (Map.Entry<Tuple2<Integer, Integer>, Double> doubleEntry : mapOperator.entrySet()) {
+              int modelX = pixelDoubleEntry.getKey().getPixelX() + doubleEntry.getKey().f0;
+              int modelY = pixelDoubleEntry.getKey().getPixelY() + doubleEntry.getKey().f1;
+              double modelValue = 0.0;
+              for (Map.Entry<Pixel, Double> smooth : temple.entrySet()) {
+                if (smooth.getKey().getPixelNo() == modelX + modelY * 256) {
+                  modelValue = smooth.getValue();
+                }
+              }
+              defineValue += modelValue * doubleEntry.getValue();
+            }
+            ret.addPixelResult(new PixelResult<>(pixelDoubleEntry.getKey(), (V) defineValue));
+            defineValue = 0.0;
+          } else {
+            ret.addPixelResult(new PixelResult<>(pixelDoubleEntry.getKey(), (V) pixelDoubleEntry.getValue()));
+          }
+        }
+      } else {
+        for (Map.Entry<Pixel, Double> entry : temple.entrySet()) {
+          ret.addPixelResult(new PixelResult<>(entry.getKey(), (V) entry.getValue()));
+        }
+      }
+      return ret;
+    }
+
+    @Override
+    public Map<Pixel, Tuple3<Double, HashSet<String>, Integer>> merge(
+        Map<Pixel, Tuple3<Double, HashSet<String>, Integer>> acc0,
+        Map<Pixel, Tuple3<Double, HashSet<String>, Integer>> acc1) {
+      Map<Pixel, Tuple3<Double, HashSet<String>, Integer>> acc2 = new HashMap<>(acc0);
+      acc1.forEach((key, value) -> acc2.merge(key, value, (v1, v2) ->
+          new Tuple3<>(v1.f0 + v1.f0, combineSets(v1.f1, v2.f1), v1.f2 + v1.f2)));
+      return acc2;
+    }
+
+    private HashSet<String> combineSets(HashSet<String> v1, HashSet<String> v2) {
+      v1.addAll(v2);
+      return v1;
+    }
+  }
+
+  public static class WindowAggregateWithID<T extends Geometry, V>
+      implements AggregateFunction<Tuple3<Pixel, T, String>,
+      Map<Pixel, Tuple3<Double, HashSet<String>, Integer>>, TileResult<V>> {
+
+    private final TileFlatMapType tileFlatMapType;
+    private final SmoothOperatorType smoothOperator;
+    private final int weightIndex;
+    Double weight;
+
+    public WindowAggregateWithID(TileFlatMapType tileFlatMapType, SmoothOperatorType smoothOperator, int weightIndex) {
+      this.tileFlatMapType = tileFlatMapType;
+      this.smoothOperator = smoothOperator;
+      this.weightIndex = weightIndex;
+    }
+
+    @Override
+    public Map<Pixel, Tuple3<Double, HashSet<String>, Integer>> createAccumulator() {
+      return new HashMap<>();
+    }
+
+    @Override
+    public Map<Pixel, Tuple3<Double, HashSet<String>, Integer>> add(
+        Tuple3<Pixel, T, String> inPixel, Map<Pixel, Tuple3<Double, HashSet<String>, Integer>> pixelIntegerMap) {
+      Pixel pixel = inPixel.f0;
+      String carNo = inPixel.f2;
       if (weightIndex >= 0) {
         weight = Double.parseDouble(((Tuple) inPixel.f1.getUserData()).getField(weightIndex));
       } else {

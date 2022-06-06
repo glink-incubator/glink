@@ -5,6 +5,7 @@ import cn.edu.whu.glink.core.operator.grid.WindowAggeFunction;
 import cn.edu.whu.glink.core.tile.Pixel;
 import cn.edu.whu.glink.core.tile.TileResult;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.windowing.assigners.WindowAssigner;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
@@ -26,6 +27,29 @@ public class SpatialHeatMap {
         .window(windowAssigner)
         .aggregate(new WindowAggeFunction.WindowAggregate<>(tileGridDataStream.getTileFlatMapType(),
                 tileGridDataStream.getSmoothOperator(), carIDIndex, weightIndex),
+            new WindowAggeFunction.AddWindowTime<>());
+
+    TileGridDataStream<T, V> tileGridDataStream1 = new<W> TileGridDataStream(
+        tileGridDataStream.tileLevel,
+        tileGridDataStream.getTileFlatMapType(),
+        tileGridDataStream.getPyramidTileAggregateType(),
+        tileResultDataStream,
+        windowAssigner,
+        hLevel);
+    return tileGridDataStream1.getAggregateDataStream();
+  }
+
+  public static <T extends Geometry, V, W extends TimeWindow> DataStream<TileResult<V>> heatmap(
+      TileGridDataStream<T, V> tileGridDataStream,
+      WindowAssigner<? super Tuple3<Pixel, T, String>, W> windowAssigner,
+      int weightIndex,
+      int hLevel) {
+    DataStream<TileResult<V>> tileResultDataStream = tileGridDataStream
+        .getTileWithIDDataStream()
+        .keyBy(t -> t.f0.getTile())
+        .window(windowAssigner)
+        .aggregate(new WindowAggeFunction.WindowAggregateWithID<>(tileGridDataStream.getTileFlatMapType(),
+                tileGridDataStream.getSmoothOperator(), weightIndex),
             new WindowAggeFunction.AddWindowTime<>());
 
     TileGridDataStream<T, V> tileGridDataStream1 = new<W> TileGridDataStream(

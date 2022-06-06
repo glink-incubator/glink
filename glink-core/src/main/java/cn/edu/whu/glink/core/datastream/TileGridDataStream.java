@@ -8,6 +8,7 @@ import cn.edu.whu.glink.core.operator.grid.WindowAggeFunction;
 import cn.edu.whu.glink.core.tile.*;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.windowing.assigners.WindowAssigner;
@@ -25,6 +26,8 @@ public class TileGridDataStream<T extends Geometry, V> {
    * Tile data flow and aggregate tile data flow
    */
   private DataStream<Tuple2<Pixel, T>> tileDataStream;
+
+  private DataStream<Tuple3<Pixel, T, String>> tileWithIDDataStream;
 
   private DataStream<TileResult<V>> tileResultDataStream;
 
@@ -71,6 +74,14 @@ public class TileGridDataStream<T extends Geometry, V> {
     return tileResultDataStream;
   }
 
+  public DataStream<Tuple3<Pixel, T, String>> getTileWithIDDataStream() {
+    return tileWithIDDataStream;
+  }
+
+  public void setTileWithIDDataStream(DataStream<Tuple3<Pixel, T, String>> tileWithIDDataStream) {
+    this.tileWithIDDataStream = tileWithIDDataStream;
+  }
+
   public TileGridDataStream(
           final SpatialDataStream<T> spatialDataStream,
           TileFlatMapType tileFlatMapType,
@@ -100,12 +111,12 @@ public class TileGridDataStream<T extends Geometry, V> {
   public TileGridDataStream(
           final SpatialDataStream<T> spatialDataStream,
           TileFlatMapType tileFlatMapType,
-          PyramidTileAggregateType pyramidTileAggreType,
+          PyramidTileAggregateType pyramidTileAggregateType,
           final int level,
           SmoothOperatorType smoothOperator
   ) {
     this.tileFlatMapType = tileFlatMapType;
-    this.pyramidTileAggregateType = pyramidTileAggreType;
+    this.pyramidTileAggregateType = pyramidTileAggregateType;
     this.smoothOperator = smoothOperator;
     this.tileLevel = level;
 
@@ -127,6 +138,64 @@ public class TileGridDataStream<T extends Geometry, V> {
     tileDataStream = spatialDataStream
         .getDataStream()
         .flatMap(new LowestPixelGenerateFlatMap(level));
+  }
+
+  public TileGridDataStream(
+      final TrajectoryDataStream<T> trajectoryDataStream,
+      TileFlatMapType tileFlatMapType,
+      PyramidTileAggregateType pyramidTileAggreType,
+      final int level) {
+    this.tileFlatMapType = tileFlatMapType;
+    this.pyramidTileAggregateType = pyramidTileAggreType;
+    this.tileLevel = level;
+
+    tileWithIDDataStream = trajectoryDataStream
+        .getDataStream()
+        .flatMap(new TrajectoryLowestPixelGenerateFlatMap(level));
+  }
+
+  public TileGridDataStream(
+      final TrajectoryDataStream<T> trajectoryDataStream,
+      TileFlatMapType tileFlatMapType,
+      final int level) {
+    this.tileFlatMapType = tileFlatMapType;
+    this.tileLevel = level;
+
+    tileWithIDDataStream = trajectoryDataStream
+        .getDataStream()
+        .flatMap(new TrajectoryLowestPixelGenerateFlatMap(level));
+  }
+
+  public TileGridDataStream(
+      final TrajectoryDataStream<T> trajectoryDataStream,
+      TileFlatMapType tileFlatMapType,
+      PyramidTileAggregateType pyramidTileAggregateType,
+      final int level,
+      SmoothOperatorType smoothOperator
+  ) {
+    this.tileFlatMapType = tileFlatMapType;
+    this.pyramidTileAggregateType = pyramidTileAggregateType;
+    this.smoothOperator = smoothOperator;
+    this.tileLevel = level;
+
+    tileWithIDDataStream = trajectoryDataStream
+        .getDataStream()
+        .flatMap(new TrajectoryLowestPixelGenerateFlatMap(level));
+  }
+
+  public TileGridDataStream(
+      final TrajectoryDataStream<T> trajectoryDataStream,
+      TileFlatMapType tileFlatMapType,
+      final int level,
+      SmoothOperatorType smoothOperator
+  ) {
+    this.tileFlatMapType = tileFlatMapType;
+    this.smoothOperator = smoothOperator;
+    this.tileLevel = level;
+
+    tileWithIDDataStream = trajectoryDataStream
+        .getDataStream()
+        .flatMap(new TrajectoryLowestPixelGenerateFlatMap(level));
   }
 
   public <W extends TimeWindow> TileGridDataStream(
@@ -185,8 +254,38 @@ public class TileGridDataStream<T extends Geometry, V> {
     }
   }
 
+  private class TrajectoryLowestPixelGenerateFlatMap extends RichFlatMapFunction<Tuple2<T, String>, Tuple3<Pixel, T, String>> {
+
+    private final int fileNumber;
+    private transient TileGrid tileGrid;
+
+    TrajectoryLowestPixelGenerateFlatMap(int fileNumber) {
+      this.fileNumber = fileNumber;
+    }
+
+    @Override
+    public void open(Configuration parameters) throws Exception {
+      tileGrid = new TileGrid(fileNumber);
+    }
+
+    @Override
+    public void flatMap(Tuple2<T, String> geom, Collector<Tuple3<Pixel, T, String>> collector) throws Exception {
+      if (geom.f0 instanceof Point) {
+        Point point = (Point) geom.f0;
+        collector.collect(new Tuple3<>(tileGrid.getPixel(point), geom.f0, geom.f1));
+      } else {
+        throw new IllegalArgumentException("Unsupported geom type");
+      }
+    }
+  }
+
   public void print() {
-    tileDataStream
-            .print();
+    if (tileDataStream != null) {
+      tileDataStream
+          .print();
+    } else {
+      tileWithIDDataStream
+          .print();
+    }
   }
 }
