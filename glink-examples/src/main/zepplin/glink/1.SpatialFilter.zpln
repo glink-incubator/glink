@@ -3,7 +3,7 @@
     {
       "text": "%md\nThis Zepplin notebook shows how to do spatial filter with Glink SQL. Compared to `SpatialDataStream` API, Glink SQL can only do some simple spatial filter. For example, filter out the points within the rectangle.",
       "user": "anonymous",
-      "dateUpdated": "2022-01-13 16:42:49.079",
+      "dateUpdated": "2022-06-08 16:58:26.241",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -39,14 +39,14 @@
       "jobName": "paragraph_1642062914943_1696215658",
       "id": "paragraph_1642062914943_1696215658",
       "dateCreated": "2022-01-13 16:35:14.943",
-      "dateStarted": "2022-01-13 16:42:49.079",
-      "dateFinished": "2022-01-13 16:42:49.088",
+      "dateStarted": "2022-06-08 16:58:26.244",
+      "dateFinished": "2022-06-08 16:58:26.296",
       "status": "FINISHED"
     },
     {
-      "text": "%md\n# 1. Create T-Drive Input Table\nWithout losing generality, we use T-Drive data in Kafka as the data source. You can choose to import T-Drive data into Kafka yourself, but we also provide a simple script to do this. To use our script, you just need to run the following command. (Note: our script adds an ingest timestamp field at the end of each record, which you can simply ignore.)\n```shell\njava -cp glink-examples-xxx.jar TDriveProducer \\\n--tn 8 \\                          # threads to use\n--p /path/to/tdrive_merge.txt \\   # change this path for your macheine\n--t tdrive_input \\                # Kafka topic to write to\n--s localhost:9092                # Kafka broker server\n```",
+      "text": "%md\n# 1. Create T-Drive Input Table\nWithout losing generality, we use T-Drive data in Kafka as the data source. You can choose to import T-Drive data into Kafka yourself, but we also provide a simple script to do this. To use our script, you just need to run the following command. (Note: our script adds an ingest timestamp field at the end of each record, which you can simply ignore.)\n```shell\njava -cp glink-examples-x.x.x.jar cn.edu.whu.glink.demo.tdrive.kafka.TDriveProducer \\\n--tn 8 \\\n--p ~/Data/tdrive_merge.txt \\\n--t tdrive_input \\\n--s localhost:9092\n```\n\n+ `--tn`: threads to use\n+ `--p`: file path of `tdrive_merge.txt`. You can download this file at [Baidu Yun Disk](https://pan.baidu.com/s/1nhgjUDp64JLvmSvEGBaAAw?pwd\u003dsfy2#list/path\u003d%2Fsharelink3392425507-1093983840669417%2FT-drive%2Frelease\u0026parentPath\u003d%2Fsharelink3392425507-1093983840669417)\n+ `--t`: Kafka topic to write\n+ `--s`: Kafka broker server",
       "user": "anonymous",
-      "dateUpdated": "2022-01-13 16:35:06.468",
+      "dateUpdated": "2022-06-08 17:32:12.021",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -72,7 +72,7 @@
         "msg": [
           {
             "type": "HTML",
-            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e1. Create T-Drive Input Table\u003c/h1\u003e\n\u003cp\u003eWithout losing generality, we use T-Drive data in Kafka as the data source. You can choose to import T-Drive data into Kafka yourself, but we also provide a simple script to do this. To use our script, you just need to run the following command. (Note: our script adds an ingest timestamp field at the end of each record, which you can simply ignore.)\u003c/p\u003e\n\u003cpre\u003e\u003ccode class\u003d\"language-shell\"\u003ejava -cp glink-examples-xxx.jar TDriveProducer \\\n--tn 8 \\                          # threads to use\n--p /path/to/tdrive_merge.txt \\   # change this path for your macheine\n--t tdrive_input \\                # Kafka topic to write to\n--s localhost:9092                # Kafka broker server\n\u003c/code\u003e\u003c/pre\u003e\n\n\u003c/div\u003e"
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e1. Create T-Drive Input Table\u003c/h1\u003e\n\u003cp\u003eWithout losing generality, we use T-Drive data in Kafka as the data source. You can choose to import T-Drive data into Kafka yourself, but we also provide a simple script to do this. To use our script, you just need to run the following command. (Note: our script adds an ingest timestamp field at the end of each record, which you can simply ignore.)\u003c/p\u003e\n\u003cpre\u003e\u003ccode class\u003d\"language-shell\"\u003ejava -cp glink-examples-x.x.x.jar cn.edu.whu.glink.demo.tdrive.kafka.TDriveProducer \\\n--tn 8 \\\n--p ~/Data/tdrive_merge.txt \\\n--t tdrive_input \\\n--s localhost:9092\n\u003c/code\u003e\u003c/pre\u003e\n\u003cul\u003e\n\u003cli\u003e\u003ccode\u003e--tn\u003c/code\u003e: threads to use\u003c/li\u003e\n\u003cli\u003e\u003ccode\u003e--p\u003c/code\u003e: file path of \u003ccode\u003etdrive_merge.txt\u003c/code\u003e. You can download this file at \u003ca href\u003d\"https://pan.baidu.com/s/1nhgjUDp64JLvmSvEGBaAAw?pwd\u003dsfy2#list/path\u003d%2Fsharelink3392425507-1093983840669417%2FT-drive%2Frelease\u0026amp;parentPath\u003d%2Fsharelink3392425507-1093983840669417\"\u003eBaidu Yun Disk\u003c/a\u003e\u003c/li\u003e\n\u003cli\u003e\u003ccode\u003e--t\u003c/code\u003e: Kafka topic to write\u003c/li\u003e\n\u003cli\u003e\u003ccode\u003e--s\u003c/code\u003e: Kafka broker server\u003c/li\u003e\n\u003c/ul\u003e\n\n\u003c/div\u003e"
           }
         ]
       },
@@ -82,14 +82,14 @@
       "jobName": "paragraph_1642062507342_759960851",
       "id": "paragraph_1642062507342_759960851",
       "dateCreated": "2022-01-13 16:28:27.342",
-      "dateStarted": "2022-01-13 16:35:06.468",
-      "dateFinished": "2022-01-13 16:35:06.479",
+      "dateStarted": "2022-06-08 17:32:12.022",
+      "dateFinished": "2022-06-08 17:32:12.161",
       "status": "FINISHED"
     },
     {
-      "text": "%flink.ssql\nCREATE TABLE tdrive_input (\n    id STRING,\n    dtg TIMESTAMP(0),\n    lng DOUBLE NOT NULL,\n    lat DOUBLE NOT NULL,\n    input_time BIGINT\n) WITH (\n  \u0027connector\u0027 \u003d \u0027kafka\u0027,\n  \u0027topic\u0027 \u003d \u0027tdrive_input\u0027,\n  \u0027properties.bootstrap.servers\u0027 \u003d \u0027localhost:9092\u0027,\n  \u0027properties.group.id\u0027 \u003d \u0027testGroup\u0027,\n  \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n  \u0027format\u0027 \u003d \u0027csv\u0027\n)",
+      "text": "%flink.ssql\nDROP TABLE IF EXISTS ;\n\nCREATE TABLE tdrive_input (\n    id STRING,\n    dtg TIMESTAMP(0),\n    lng DOUBLE NOT NULL,\n    lat DOUBLE NOT NULL,\n    input_time BIGINT\n) WITH (\n  \u0027connector\u0027 \u003d \u0027kafka\u0027,\n  \u0027topic\u0027 \u003d \u0027tdrive_input\u0027,\n  \u0027properties.bootstrap.servers\u0027 \u003d \u0027localhost:9092\u0027,\n  \u0027properties.group.id\u0027 \u003d \u0027testGroup\u0027,\n  \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n  \u0027format\u0027 \u003d \u0027csv\u0027\n)",
       "user": "anonymous",
-      "dateUpdated": "2022-01-13 16:22:23.569",
+      "dateUpdated": "2022-06-08 17:33:19.615",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -123,8 +123,8 @@
       "jobName": "paragraph_1642058250646_533532955",
       "id": "paragraph_1642058250646_533532955",
       "dateCreated": "2022-01-13 15:17:30.646",
-      "dateStarted": "2022-01-13 15:40:22.580",
-      "dateFinished": "2022-01-13 15:40:22.767",
+      "dateStarted": "2022-06-08 17:21:28.146",
+      "dateFinished": "2022-06-08 17:23:22.259",
       "status": "FINISHED"
     },
     {
@@ -171,9 +171,9 @@
       "status": "FINISHED"
     },
     {
-      "text": "%flink.ssql\nCREATE TABLE tdrive_output (\n    id STRING,\n    dtg TIMESTAMP(0),\n    lng DOUBLE NOT NULL,\n    lat DOUBLE NOT NULL,\n    input_time BIGINT\n) WITH (\n  \u0027connector\u0027 \u003d \u0027kafka\u0027,\n  \u0027topic\u0027 \u003d \u0027tdrive_output\u0027,\n  \u0027properties.bootstrap.servers\u0027 \u003d \u0027localhost:9092\u0027,\n  \u0027properties.group.id\u0027 \u003d \u0027testGroup\u0027,\n  \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n  \u0027format\u0027 \u003d \u0027csv\u0027\n)",
+      "text": "%flink.ssql\nDROP TABLE IF EXISTS tdrive_output;\n\nCREATE TABLE tdrive_output (\n    id STRING,\n    dtg TIMESTAMP(0),\n    lng DOUBLE NOT NULL,\n    lat DOUBLE NOT NULL,\n    input_time BIGINT\n) WITH (\n  \u0027connector\u0027 \u003d \u0027kafka\u0027,\n  \u0027topic\u0027 \u003d \u0027tdrive_output\u0027,\n  \u0027properties.bootstrap.servers\u0027 \u003d \u0027localhost:9092\u0027,\n  \u0027properties.group.id\u0027 \u003d \u0027testGroup\u0027,\n  \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n  \u0027format\u0027 \u003d \u0027csv\u0027\n)",
       "user": "anonymous",
-      "dateUpdated": "2022-01-13 15:44:39.946",
+      "dateUpdated": "2022-06-08 17:33:32.395",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -207,8 +207,8 @@
       "jobName": "paragraph_1642059824294_2138878708",
       "id": "paragraph_1642059824294_2138878708",
       "dateCreated": "2022-01-13 15:43:44.294",
-      "dateStarted": "2022-01-13 15:44:39.949",
-      "dateFinished": "2022-01-13 15:44:40.205",
+      "dateStarted": "2022-06-08 17:23:29.019",
+      "dateFinished": "2022-06-08 17:23:29.523",
       "status": "FINISHED"
     },
     {
@@ -255,9 +255,9 @@
       "status": "FINISHED"
     },
     {
-      "text": "%flink.ssql\ninsert into tdrive_output\n    select * from tdrive \n    where ST_Contains(\n        ST_PolygonFromText(\u0027POLYGON ((116.326655 39.859793, 116.316594 39.968705, 116.458598 39.974013, 116.462048 39.86954, 116.326655 39.859793))\u0027), \n        ST_Point(lng, lat)\n    );",
+      "text": "%flink.ssql\ninsert into tdrive_output\n    select * from tdrive_input \n    where ST_Contains(\n        ST_PolygonFromText(\u0027POLYGON ((116.326655 39.859793, 116.316594 39.968705, 116.458598 39.974013, 116.462048 39.86954, 116.326655 39.859793))\u0027), \n        ST_Point(lng, lat)\n    );",
       "user": "anonymous",
-      "dateUpdated": "2022-01-13 15:59:56.084",
+      "dateUpdated": "2022-06-08 17:23:42.949",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -314,8 +314,8 @@
       "jobName": "paragraph_1642058344335_169014503",
       "id": "paragraph_1642058344335_169014503",
       "dateCreated": "2022-01-13 15:19:04.335",
-      "dateStarted": "2022-01-13 15:59:56.085",
-      "dateFinished": "2022-01-13 16:01:01.461",
+      "dateStarted": "2022-06-08 17:23:42.960",
+      "dateFinished": "2022-06-08 17:24:35.799",
       "status": "ABORT"
     }
   ],

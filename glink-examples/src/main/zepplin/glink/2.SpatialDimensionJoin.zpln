@@ -87,9 +87,9 @@
       "status": "FINISHED"
     },
     {
-      "text": "%flink.ssql\nCREATE TABLE tdrive_input (\n    id STRING,\n    dtg TIMESTAMP(0),\n    lng DOUBLE NOT NULL,\n    lat DOUBLE NOT NULL,\n    input_time BIGINT,\n    proctime AS PROCTIME()\n) WITH (\n  \u0027connector\u0027 \u003d \u0027kafka\u0027,\n  \u0027topic\u0027 \u003d \u0027tdrive\u0027,\n  \u0027properties.bootstrap.servers\u0027 \u003d \u0027localhost:9092\u0027,\n  \u0027properties.group.id\u0027 \u003d \u0027testGroup1\u0027,\n  \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n  \u0027format\u0027 \u003d \u0027csv\u0027\n)",
+      "text": "%flink.ssql\nDROP TABLE IF EXISTS tdrive_input;\n\nCREATE TABLE tdrive_input (\n    id STRING,\n    dtg TIMESTAMP(0),\n    lng DOUBLE NOT NULL,\n    lat DOUBLE NOT NULL,\n    input_time BIGINT,\n    proctime AS PROCTIME()\n) WITH (\n  \u0027connector\u0027 \u003d \u0027kafka\u0027,\n  \u0027topic\u0027 \u003d \u0027tdrive\u0027,\n  \u0027properties.bootstrap.servers\u0027 \u003d \u0027localhost:9092\u0027,\n  \u0027properties.group.id\u0027 \u003d \u0027testGroup1\u0027,\n  \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n  \u0027format\u0027 \u003d \u0027csv\u0027\n)",
       "user": "anonymous",
-      "dateUpdated": "2022-01-13 16:59:53.036",
+      "dateUpdated": "2022-06-08 17:27:24.825",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -113,7 +113,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "Table has been created.\n"
+            "data": "Table has been dropped.\nTable has been created.\n"
           }
         ]
       },
@@ -123,8 +123,8 @@
       "jobName": "paragraph_1642063898905_973254252",
       "id": "paragraph_1642063898905_973254252",
       "dateCreated": "2022-01-13 16:51:38.905",
-      "dateStarted": "2022-01-13 16:59:53.039",
-      "dateFinished": "2022-01-13 16:59:53.267",
+      "dateStarted": "2022-06-08 17:27:24.835",
+      "dateFinished": "2022-06-08 17:27:25.379",
       "status": "FINISHED"
     },
     {
@@ -171,9 +171,9 @@
       "status": "FINISHED"
     },
     {
-      "text": "%flink.ssql\nCREATE TABLE tdrive_output (\n    point_id STRING,\n    dtg TIMESTAMP(0),\n    lng DOUBLE NOT NULL,\n    lat DOUBLE NOT NULL,\n    area_id STRING,\n    name STRING\n) WITH (\n  \u0027connector\u0027 \u003d \u0027kafka\u0027,\n  \u0027topic\u0027 \u003d \u0027tdrive_output\u0027,\n  \u0027properties.bootstrap.servers\u0027 \u003d \u0027localhost:9092\u0027,\n  \u0027format\u0027 \u003d \u0027csv\u0027\n)",
+      "text": "%flink.ssql\nDROP TABLE IF EXISTS tdrive_output;\n\nCREATE TABLE tdrive_output (\n    point_id STRING,\n    dtg TIMESTAMP(0),\n    lng DOUBLE NOT NULL,\n    lat DOUBLE NOT NULL,\n    area_id STRING,\n    name STRING\n) WITH (\n  \u0027connector\u0027 \u003d \u0027kafka\u0027,\n  \u0027topic\u0027 \u003d \u0027tdrive_output\u0027,\n  \u0027properties.bootstrap.servers\u0027 \u003d \u0027localhost:9092\u0027,\n  \u0027format\u0027 \u003d \u0027csv\u0027\n)",
       "user": "anonymous",
-      "dateUpdated": "2022-01-13 17:01:00.309",
+      "dateUpdated": "2022-06-08 17:27:47.670",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -197,7 +197,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "Table has been created.\n"
+            "data": "Table has been dropped.\nTable has been created.\n"
           }
         ]
       },
@@ -207,14 +207,14 @@
       "jobName": "paragraph_1642064265678_400086462",
       "id": "paragraph_1642064265678_400086462",
       "dateCreated": "2022-01-13 16:57:45.689",
-      "dateStarted": "2022-01-13 17:01:00.338",
-      "dateFinished": "2022-01-13 17:01:00.564",
+      "dateStarted": "2022-06-08 17:27:47.678",
+      "dateFinished": "2022-06-08 17:27:48.070",
       "status": "FINISHED"
     },
     {
-      "text": "%md\n# 3. Create GeoMesa Dimension Table\nWe use the administrative divisions of Beijing as a spatial dimension table, and each record in the table represents a district. We need to create the table in GeoMesa and import the corresponding data. To achieve this goal, we can perform the following steps.\n1. Create a GeoMesa table with cmd: `geomesa-hbase create-schema -c beijing-district -s \"pid:String,name:String,area:Polygon\" -f beijing-district`\n2. Ingest the beijing district data into geomesa: `geomesa-hbase ingest -c beijing-district -f beijing-district -C glink-examples/src/main/resources/data/beijing_district.conf glink-examples/src/resources/data/beijing_district.csv` (Note: the `beijing_district.conf` and `beijing_district.csv` are in the source code of glink)",
+      "text": "%md\n# 3. Create GeoMesa Dimension Table\nWe use the administrative divisions of Beijing as a spatial dimension table, and each record in the table represents a district. We need to create the table in GeoMesa and import the corresponding data. To achieve this goal, we can perform the following steps.\n1. Create a GeoMesa table with cmd: `geomesa-hbase create-schema -c beijing-district -s \"pid:String,name:String,area:Polygon\" -f beijing-district`\n2. Ingest the beijing district data into geomesa: `geomesa-hbase ingest -c beijing-district -f beijing-district -C glink-examples/src/main/resources/data/beijing_district.conf glink-examples/src/resources/data/beijing_district.csv` (Note: the [beijing_district.conf](https://github.com/glink-incubator/glink/blob/master/glink-examples/src/main/resources/data/beijing_district.conf) and [beijing_district.csv](https://github.com/glink-incubator/glink/blob/master/glink-examples/src/main/resources/data/beijing_district.csv) are in the source code of glink)",
       "user": "anonymous",
-      "dateUpdated": "2022-01-13 17:30:18.329",
+      "dateUpdated": "2022-06-08 17:36:49.125",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -240,7 +240,7 @@
         "msg": [
           {
             "type": "HTML",
-            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e3. Create GeoMesa Dimension Table\u003c/h1\u003e\n\u003cp\u003eWe use the administrative divisions of Beijing as a spatial dimension table, and each record in the table represents a district. We need to create the table in GeoMesa and import the corresponding data. To achieve this goal, we can perform the following steps.\u003c/p\u003e\n\u003col\u003e\n\u003cli\u003eCreate a GeoMesa table with cmd: \u003ccode\u003egeomesa-hbase create-schema -c beijing-district -s \u0026quot;pid:String,name:String,area:Polygon\u0026quot; -f beijing-district\u003c/code\u003e\u003c/li\u003e\n\u003cli\u003eIngest the beijing district data into geomesa: \u003ccode\u003egeomesa-hbase ingest -c beijing-district -f beijing-district -C glink-examples/src/main/resources/data/beijing_district.conf glink-examples/src/resources/data/beijing_district.csv\u003c/code\u003e (Note: the \u003ccode\u003ebeijing_district.conf\u003c/code\u003e and \u003ccode\u003ebeijing_district.csv\u003c/code\u003e are in the source code of glink)\u003c/li\u003e\n\u003c/ol\u003e\n\n\u003c/div\u003e"
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e3. Create GeoMesa Dimension Table\u003c/h1\u003e\n\u003cp\u003eWe use the administrative divisions of Beijing as a spatial dimension table, and each record in the table represents a district. We need to create the table in GeoMesa and import the corresponding data. To achieve this goal, we can perform the following steps.\u003c/p\u003e\n\u003col\u003e\n\u003cli\u003eCreate a GeoMesa table with cmd: \u003ccode\u003egeomesa-hbase create-schema -c beijing-district -s \u0026quot;pid:String,name:String,area:Polygon\u0026quot; -f beijing-district\u003c/code\u003e\u003c/li\u003e\n\u003cli\u003eIngest the beijing district data into geomesa: \u003ccode\u003egeomesa-hbase ingest -c beijing-district -f beijing-district -C glink-examples/src/main/resources/data/beijing_district.conf glink-examples/src/resources/data/beijing_district.csv\u003c/code\u003e (Note: the \u003ca href\u003d\"https://github.com/glink-incubator/glink/blob/master/glink-examples/src/main/resources/data/beijing_district.conf\"\u003ebeijing_district.conf\u003c/a\u003e and \u003ca href\u003d\"https://github.com/glink-incubator/glink/blob/master/glink-examples/src/main/resources/data/beijing_district.csv\"\u003ebeijing_district.csv\u003c/a\u003e are in the source code of glink)\u003c/li\u003e\n\u003c/ol\u003e\n\n\u003c/div\u003e"
           }
         ]
       },
@@ -250,14 +250,14 @@
       "jobName": "paragraph_1642065755617_997853406",
       "id": "paragraph_1642065755617_997853406",
       "dateCreated": "2022-01-13 17:22:35.618",
-      "dateStarted": "2022-01-13 17:30:18.358",
-      "dateFinished": "2022-01-13 17:30:18.377",
+      "dateStarted": "2022-06-08 17:36:49.125",
+      "dateFinished": "2022-06-08 17:36:49.169",
       "status": "FINISHED"
     },
     {
-      "text": "%flink.ssql\r\nCREATE TABLE beijing_district (\r\n    pid STRING,\r\n    name STRING,\r\n    area STRING,\r\n    PRIMARY KEY (pid) NOT ENFORCED)\r\nWITH (\r\n    \u0027connector\u0027 \u003d \u0027geomesa\u0027,\r\n    \u0027geomesa.data.store\u0027 \u003d \u0027hbase\u0027,\r\n    \u0027geomesa.schema.name\u0027 \u003d \u0027beijing-district\u0027,\r\n    \u0027geomesa.spatial.fields\u0027 \u003d \u0027area:Polygon\u0027,\r\n    \u0027geomesa.temporal.join.predict\u0027 \u003d \u0027I\u0027,\r\n    \u0027hbase.zookeepers\u0027 \u003d \u0027localhost:2181\u0027,\r\n    \u0027hbase.catalog\u0027 \u003d \u0027beijing-district\u0027\r\n);",
+      "text": "%flink.ssql\r\nDROP TABLE IF EXISTS beijing_district;\r\n\r\nCREATE TABLE beijing_district (\r\n    pid STRING,\r\n    name STRING,\r\n    area STRING,\r\n    PRIMARY KEY (pid) NOT ENFORCED)\r\nWITH (\r\n    \u0027connector\u0027 \u003d \u0027geomesa\u0027,\r\n    \u0027geomesa.data.store\u0027 \u003d \u0027hbase\u0027,\r\n    \u0027geomesa.schema.name\u0027 \u003d \u0027beijing-district\u0027,\r\n    \u0027geomesa.spatial.fields\u0027 \u003d \u0027area:Polygon\u0027,\r\n    \u0027geomesa.temporal.join.predict\u0027 \u003d \u0027I\u0027,\r\n    \u0027hbase.zookeepers\u0027 \u003d \u0027localhost:2181\u0027,\r\n    \u0027hbase.catalog\u0027 \u003d \u0027beijing-district\u0027\r\n);",
       "user": "anonymous",
-      "dateUpdated": "2022-01-13 16:49:01.598",
+      "dateUpdated": "2022-06-08 17:28:56.774",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -291,8 +291,8 @@
       "jobName": "paragraph_1642062448645_1383114318",
       "id": "paragraph_1642062448645_1383114318",
       "dateCreated": "2022-01-13 16:27:28.645",
-      "dateStarted": "2022-01-13 16:49:01.602",
-      "dateFinished": "2022-01-13 16:49:02.155",
+      "dateStarted": "2022-06-08 17:25:52.816",
+      "dateFinished": "2022-06-08 17:25:53.327",
       "status": "FINISHED"
     },
     {
@@ -341,7 +341,7 @@
     {
       "text": "%flink.ssql\nINSERT INTO tdrive_output\nSELECT A.id AS point_id, A.dtg, A.lng, A.lat, B.pid AS area_id, B.name\n    FROM tdrive_input AS A\n    LEFT JOIN beijing_district FOR SYSTEM_TIME AS OF A.proctime AS B\n    ON ST_AsText(ST_Point(A.lng, A.lat)) \u003d B.area;",
       "user": "anonymous",
-      "dateUpdated": "2022-01-13 17:01:02.743",
+      "dateUpdated": "2022-06-08 17:27:55.924",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -386,40 +386,14 @@
         "params": {},
         "forms": {}
       },
-      "results": {
-        "code": "ERROR",
-        "msg": [
-          {
-            "type": "ANGULAR",
-            "data": "\u003ch1\u003eDuration: {{duration}} \u003c/h1\u003e\n"
-          },
-          {
-            "type": "TEXT",
-            "data": "Fail to run sql command: INSERT INTO tdrive_output\nSELECT A.id AS point_id, A.dtg, A.lng, A.lat, B.pid AS area_id, B.name\n    FROM tdrive_input AS A\n    LEFT JOIN beijing_district FOR SYSTEM_TIME AS OF A.proctime AS B\n    ON ST_AsText(ST_Point(A.lng, A.lat)) \u003d B.area\njava.io.IOException: org.apache.flink.client.program.ProgramInvocationException: Job failed (JobID: df78ac0581e1d7b8039e973b4339bd89)\n\tat org.apache.zeppelin.flink.FlinkSqlInterpreter.callInsertInto(FlinkSqlInterpreter.java:550)\n\tat org.apache.zeppelin.flink.FlinkStreamSqlInterpreter.callInsertInto(FlinkStreamSqlInterpreter.java:94)\n\tat org.apache.zeppelin.flink.FlinkSqlInterpreter.callCommand(FlinkSqlInterpreter.java:264)\n\tat org.apache.zeppelin.flink.FlinkSqlInterpreter.runSqlList(FlinkSqlInterpreter.java:151)\n\tat org.apache.zeppelin.flink.FlinkSqlInterpreter.internalInterpret(FlinkSqlInterpreter.java:109)\n\tat org.apache.zeppelin.interpreter.AbstractInterpreter.interpret(AbstractInterpreter.java:55)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:110)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:849)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:741)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler.lambda$runJobInScheduler$0(ParallelScheduler.java:46)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: org.apache.flink.client.program.ProgramInvocationException: Job failed (JobID: df78ac0581e1d7b8039e973b4339bd89)\n\tat org.apache.flink.client.deployment.ClusterClientJobClientAdapter.lambda$null$6(ClusterClientJobClientAdapter.java:125)\n\tat java.util.concurrent.CompletableFuture.uniApply(CompletableFuture.java:616)\n\tat java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:591)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:488)\n\tat java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:1975)\n\tat org.apache.flink.runtime.concurrent.FutureUtils.lambda$retryOperationWithDelay$9(FutureUtils.java:394)\n\tat java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:774)\n\tat java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:750)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:488)\n\tat java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:1975)\n\tat org.apache.flink.client.program.rest.RestClusterClient.lambda$pollResourceAsync$24(RestClusterClient.java:670)\n\tat java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:774)\n\tat java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:750)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:488)\n\tat java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:1975)\n\tat org.apache.flink.runtime.concurrent.FutureUtils.lambda$retryOperationWithDelay$9(FutureUtils.java:394)\n\tat java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:774)\n\tat java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:750)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:488)\n\tat java.util.concurrent.CompletableFuture.postFire(CompletableFuture.java:575)\n\tat java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:943)\n\tat java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:456)\n\t... 3 more\nCaused by: org.apache.flink.runtime.client.JobCancellationException: Job was cancelled.\n\tat org.apache.flink.runtime.jobmaster.JobResult.toJobExecutionResult(JobResult.java:146)\n\tat org.apache.flink.client.deployment.ClusterClientJobClientAdapter.lambda$null$6(ClusterClientJobClientAdapter.java:123)\n\t... 24 more\n\n"
-          }
-        ]
-      },
       "apps": [],
-      "runtimeInfos": {
-        "jobUrl": {
-          "propertyName": "jobUrl",
-          "label": "FLINK JOB",
-          "tooltip": "View in Flink web UI",
-          "group": "flink",
-          "values": [
-            {
-              "jobUrl": "false#/job/df78ac0581e1d7b8039e973b4339bd89"
-            }
-          ],
-          "interpreterSettingId": "flink"
-        }
-      },
+      "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1642063741600_935080386",
       "id": "paragraph_1642063741600_935080386",
       "dateCreated": "2022-01-13 16:49:01.600",
-      "dateStarted": "2022-01-13 17:01:02.764",
-      "dateFinished": "2022-01-13 17:01:39.419",
+      "dateStarted": "2022-06-08 17:27:55.932",
+      "dateFinished": "2022-06-08 17:28:28.962",
       "status": "ABORT"
     }
   ],
