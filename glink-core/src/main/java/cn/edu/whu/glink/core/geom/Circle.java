@@ -88,6 +88,11 @@ public class Circle extends Geometry {
   }
 
   @Override
+  protected Geometry reverseInternal() {
+    return null;
+  }
+
+  @Override
   public boolean equalsExact(Geometry geometry, double v) {
     return false;
   }
@@ -141,7 +146,7 @@ public class Circle extends Geometry {
   }
 
   @Override
-  protected int getSortIndex() {
+  protected int getTypeCode() {
     return 0;
   }
 
