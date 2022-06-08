@@ -17,21 +17,21 @@ public class SpatialHeatMap {
   public static <T extends Geometry, V, W extends TimeWindow> DataStream<TileResult<V>> heatmap(
       TileGridDataStream<T, V> tileGridDataStream,
       WindowAssigner<? super Tuple2<Pixel, T>, W> windowAssigner,
-      int carIDIndex,
+      int idIndex,
       int weightIndex,
       int hLevel) {
     DataStream<TileResult<V>> tileResultDataStream = tileGridDataStream
         .getTileDataStream()
         .keyBy(t -> t.f0.getTile())
         .window(windowAssigner)
-        .aggregate(new WindowAggeFunction.WindowAggregate<>(tileGridDataStream.getTileFlatMapType(),
-                tileGridDataStream.getSmoothOperator(), carIDIndex, weightIndex),
+        .aggregate(new WindowAggeFunction.WindowAggregate<>(tileGridDataStream.getTileAggregateType(),
+                tileGridDataStream.getSmoothOperator(), idIndex, weightIndex),
             new WindowAggeFunction.AddWindowTime<>());
 
-    TileGridDataStream<T, V> tileGridDataStream1 = new<W> TileGridDataStream(
+    TileGridDataStream<T, V> tileGridDataStream1 = new TileGridDataStream(
         tileGridDataStream.tileLevel,
-        tileGridDataStream.getTileFlatMapType(),
-        tileGridDataStream.getPyramidTileAggregateType(),
+        tileGridDataStream.getTileAggregateType(),
+        tileGridDataStream.getPyramidAggregateType(),
         tileResultDataStream,
         windowAssigner,
         hLevel);

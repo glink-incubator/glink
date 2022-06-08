@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @author Xu Qi
  */
-public enum PyramidTileAggregateType implements Serializable {
+public enum PyramidAggregateType implements Serializable {
   COUNT,
   MAX,
   MIN,

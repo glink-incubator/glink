@@ -1,8 +1,8 @@
 package cn.edu.whu.glink.core.datastream;
 
-import cn.edu.whu.glink.core.enums.PyramidTileAggregateType;
+import cn.edu.whu.glink.core.enums.PyramidAggregateType;
 import cn.edu.whu.glink.core.enums.SmoothOperatorType;
-import cn.edu.whu.glink.core.enums.TileFlatMapType;
+import cn.edu.whu.glink.core.enums.TileAggregateType;
 import cn.edu.whu.glink.core.operator.grid.AddUpperKeyMapper;
 import cn.edu.whu.glink.core.operator.grid.WindowAggeFunction;
 import cn.edu.whu.glink.core.tile.*;
@@ -33,14 +33,14 @@ public class TileGridDataStream<T extends Geometry, V> {
   /**
    * Initial level
    */
-  public Integer tileLevel;
+  public int tileLevel;
 
   /**
    * Pixel aggregation logic and hierarchical aggregation logic enumeration
    */
-  public PyramidTileAggregateType pyramidTileAggregateType;
+  public PyramidAggregateType pyramidAggregateType;
 
-  public TileFlatMapType tileFlatMapType;
+  public TileAggregateType tileAggregateType;
 
   /**
    * Window smoothing operator
@@ -51,12 +51,12 @@ public class TileGridDataStream<T extends Geometry, V> {
     return smoothOperator;
   }
 
-  public PyramidTileAggregateType getPyramidTileAggregateType() {
-    return pyramidTileAggregateType;
+  public PyramidAggregateType getPyramidAggregateType() {
+    return pyramidAggregateType;
   }
 
-  public TileFlatMapType getTileFlatMapType() {
-    return tileFlatMapType;
+  public TileAggregateType getTileAggregateType() {
+    return tileAggregateType;
   }
 
   public DataStream<Tuple2<Pixel, T>> getTileDataStream() {
@@ -73,11 +73,11 @@ public class TileGridDataStream<T extends Geometry, V> {
 
   public TileGridDataStream(
           final SpatialDataStream<T> spatialDataStream,
-          TileFlatMapType tileFlatMapType,
-          PyramidTileAggregateType pyramidTileAggreType,
+          TileAggregateType tileFlatMapType,
+          PyramidAggregateType pyramidAggregateType,
           final int level) {
-    this.tileFlatMapType = tileFlatMapType;
-    this.pyramidTileAggregateType = pyramidTileAggreType;
+    this.pyramidAggregateType = pyramidAggregateType;
+    this.tileAggregateType = tileFlatMapType;
     this.tileLevel = level;
 
     tileDataStream = spatialDataStream
@@ -87,9 +87,9 @@ public class TileGridDataStream<T extends Geometry, V> {
 
   public TileGridDataStream(
       final SpatialDataStream<T> spatialDataStream,
-      TileFlatMapType tileFlatMapType,
+      TileAggregateType tileFlatMapType,
       final int level) {
-    this.tileFlatMapType = tileFlatMapType;
+    this.tileAggregateType = tileFlatMapType;
     this.tileLevel = level;
 
     tileDataStream = spatialDataStream
@@ -99,13 +99,12 @@ public class TileGridDataStream<T extends Geometry, V> {
 
   public TileGridDataStream(
           final SpatialDataStream<T> spatialDataStream,
-          TileFlatMapType tileFlatMapType,
-          PyramidTileAggregateType pyramidTileAggreType,
+          TileAggregateType tileFlatMapType,
+          PyramidAggregateType pyramidAggregateType,
           final int level,
-          SmoothOperatorType smoothOperator
-  ) {
-    this.tileFlatMapType = tileFlatMapType;
-    this.pyramidTileAggregateType = pyramidTileAggreType;
+          SmoothOperatorType smoothOperator) {
+    this.tileAggregateType = tileFlatMapType;
+    this.pyramidAggregateType = pyramidAggregateType;
     this.smoothOperator = smoothOperator;
     this.tileLevel = level;
 
@@ -116,11 +115,10 @@ public class TileGridDataStream<T extends Geometry, V> {
 
   public TileGridDataStream(
       final SpatialDataStream<T> spatialDataStream,
-      TileFlatMapType tileFlatMapType,
+      TileAggregateType tileFlatMapType,
       final int level,
-      SmoothOperatorType smoothOperator
-  ) {
-    this.tileFlatMapType = tileFlatMapType;
+      SmoothOperatorType smoothOperator) {
+    this.tileAggregateType = tileFlatMapType;
     this.smoothOperator = smoothOperator;
     this.tileLevel = level;
 
@@ -131,8 +129,8 @@ public class TileGridDataStream<T extends Geometry, V> {
 
   public <W extends TimeWindow> TileGridDataStream(
           int tileLevel,
-          TileFlatMapType tileFlatMapType,
-          PyramidTileAggregateType pyramidTileAggregateType,
+          TileAggregateType tileFlatMapType,
+          PyramidAggregateType pyramidTileAggregateType,
           DataStream<TileResult<V>> tileDataStream,
           WindowAssigner<? super Tuple2<TileResult<V>, Tile>, W> windowAssigner,
           Integer hLevel) {
@@ -142,7 +140,6 @@ public class TileGridDataStream<T extends Geometry, V> {
         tileResultDataStream = tileDataStream
                 .flatMap(new AddUpperKeyMapper<>())
                 .keyBy(t -> t.f1)
-                //层级瓦片重采样
                 .window(windowAssigner)
                 .aggregate(new WindowAggeFunction.LevelUpAggregate<>(tileFlatMapType, pyramidTileAggregateType),
                     new WindowAggeFunction.AddWindowTime<>());
@@ -151,7 +148,6 @@ public class TileGridDataStream<T extends Geometry, V> {
         tileResultDataStream = tileResultDataStream
                 .flatMap(new AddUpperKeyMapper<>())
                 .keyBy(t -> t.f1)
-                //层级瓦片重采样
                 .window(windowAssigner)
                 .aggregate(new WindowAggeFunction.LevelUpAggregate<>(tileFlatMapType, pyramidTileAggregateType),
                     new WindowAggeFunction.AddWindowTime<>());

@@ -80,11 +80,11 @@ public class Tile implements Serializable {
     }
     return new Tile(level, (int) x, (int) y);
   }
-  public Tile getUpperTile() {
-    int newx = (int) ((double) x / 2);
-    int newy = (int) ((double) y / 2);
-    int newlevel = level - 1;
-    return new Tile(newlevel, newx, newy);
-  }
 
+  public Tile getUpperTile() {
+    int newX = (int) ((double) x / 2);
+    int newY = (int) ((double) y / 2);
+    int newLevel = level - 1;
+    return new Tile(newLevel, newX, newY);
+  }
 }

@@ -2,14 +2,12 @@ package cn.edu.whu.glink.examples.datastream;
 
 import cn.edu.whu.glink.core.datastream.SpatialDataStream;
 import cn.edu.whu.glink.core.datastream.TileGridDataStream;
-import cn.edu.whu.glink.core.enums.PyramidTileAggregateType;
-import cn.edu.whu.glink.core.enums.TileFlatMapType;
+import cn.edu.whu.glink.core.enums.TileAggregateType;
 import cn.edu.whu.glink.core.process.SpatialHeatMap;
 import cn.edu.whu.glink.core.tile.TileResult;
 import cn.edu.whu.glink.examples.utils.SimpleSTDPointFlatMapper;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.java.tuple.Tuple;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
@@ -19,7 +17,7 @@ import org.locationtech.jts.geom.Point;
 import java.time.Duration;
 
 /**
- * data example:
+ * Data example:
  * <ul>
  *   <li>10,113.99005581373353,34.00230051917847,2021-12-11 19:59:57,1,1</li>
  *   <li>10,113.99005581373353,34.00230051917847,2021-12-11 19:59:58,2,3</li>
@@ -50,10 +48,10 @@ public class SpatialHeatmapExample {
                 (event, time) -> ((Tuple) event.getUserData()).getField(1)));
 
     TileGridDataStream<Point, Double> pointTileGridDataStream = new TileGridDataStream<>(
-        spatialDataStream, TileFlatMapType.SUM, 15
-    );
+        spatialDataStream, TileAggregateType.SUM, 15);
 
     pointTileGridDataStream.print();
+
     DataStream<TileResult<Double>> heatmapStream = SpatialHeatMap.heatmap(
         pointTileGridDataStream,
         TumblingEventTimeWindows.of(Time.seconds(5)),

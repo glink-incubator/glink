@@ -10,7 +10,7 @@ public class TileGrid {
 
   public static final int MAX_LEVEL = 18;
 
-  private int level;
+  private final int level;
 
   public TileGrid(int level) {
     this.level = level;
@@ -54,9 +54,11 @@ public class TileGrid {
     return new double[] {lng, lat};
   }
 
-//   Use web Mercator projection.
-//   The first item is the column number (x) of the tile.
-//   The second item is the row number (y) of the tile.
+  /**
+   * Use web Mercator projection.
+   * The first item is the column number (x) of the tile.
+   * The second item is the row number (y) of the tile.
+   * */
   private double[] getTileXYDouble(double lng, double lat) {
     double n = Math.pow(2, level);
     double  tileX = (lng + 180) / 360 * n;

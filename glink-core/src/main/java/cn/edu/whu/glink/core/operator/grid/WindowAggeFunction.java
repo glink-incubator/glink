@@ -1,9 +1,8 @@
 package cn.edu.whu.glink.core.operator.grid;
 
-import cn.edu.whu.glink.core.datastream.TileGridDataStream;
-import cn.edu.whu.glink.core.enums.PyramidTileAggregateType;
+import cn.edu.whu.glink.core.enums.PyramidAggregateType;
 import cn.edu.whu.glink.core.enums.SmoothOperatorType;
-import cn.edu.whu.glink.core.enums.TileFlatMapType;
+import cn.edu.whu.glink.core.enums.TileAggregateType;
 import cn.edu.whu.glink.core.tile.Pixel;
 import cn.edu.whu.glink.core.tile.PixelResult;
 import cn.edu.whu.glink.core.tile.Tile;
@@ -45,13 +44,13 @@ public class WindowAggeFunction {
       implements AggregateFunction<Tuple2<Pixel, T>,
       Map<Pixel, Tuple3<Double, HashSet<String>, Integer>>, TileResult<V>> {
 
-    private final TileFlatMapType tileFlatMapType;
+    private final TileAggregateType tileFlatMapType;
     private final SmoothOperatorType smoothOperator;
     private final int carIDIndex;
     private final int weightIndex;
     Double weight;
 
-    public WindowAggregate(TileFlatMapType tileFlatMapType, SmoothOperatorType smoothOperator, int carIDIndex, int weightIndex) {
+    public WindowAggregate(TileAggregateType tileFlatMapType, SmoothOperatorType smoothOperator, int carIDIndex, int weightIndex) {
       this.tileFlatMapType = tileFlatMapType;
       this.smoothOperator = smoothOperator;
       this.carIDIndex = carIDIndex;
@@ -112,7 +111,7 @@ public class WindowAggeFunction {
       ret.setTile(pixelIntegerMap.keySet().iterator().next().getTile());
       for (Map.Entry<Pixel, Tuple3<Double, HashSet<String>, Integer>> entry : pixelIntegerMap.entrySet()) {
         double finalValue;
-        if (tileFlatMapType == TileFlatMapType.AVG) {
+        if (tileFlatMapType == TileAggregateType.AVG) {
           finalValue = entry.getValue().f0 / entry.getValue().f2;
         } else {
           finalValue = entry.getValue().f0;
@@ -172,11 +171,11 @@ public class WindowAggeFunction {
   public static class LevelUpAggregate<T extends Geometry, V> implements
       AggregateFunction<Tuple2<TileResult<V>, Tile>, Map<Pixel, Double>, TileResult<V>> {
 
-    private final TileFlatMapType tileFlatMapType;
-    private final PyramidTileAggregateType pyramidTileAggregateType;
+    private final TileAggregateType tileFlatMapType;
+    private final PyramidAggregateType pyramidTileAggregateType;
 
-    public LevelUpAggregate(TileFlatMapType tileFlatMapType,
-                            PyramidTileAggregateType pyramidTileAggregateType) {
+    public LevelUpAggregate(TileAggregateType tileFlatMapType,
+                            PyramidAggregateType pyramidTileAggregateType) {
       this.tileFlatMapType = tileFlatMapType;
       this.pyramidTileAggregateType = pyramidTileAggregateType;
     }
@@ -268,7 +267,7 @@ public class WindowAggeFunction {
       ret.setTile(pixelIntegerMap.keySet().iterator().next().getTile());
       Double finalvalue;
       for (Map.Entry<Pixel, Double> entry : pixelIntegerMap.entrySet()) {
-        if (pyramidTileAggregateType == PyramidTileAggregateType.AVG) {
+        if (pyramidTileAggregateType == PyramidAggregateType.AVG) {
           finalvalue = entry.getValue() / 4;
         } else {
           finalvalue = entry.getValue();

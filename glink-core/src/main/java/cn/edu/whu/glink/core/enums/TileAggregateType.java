@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @author Xu Qi
  */
-public enum TileFlatMapType implements Serializable {
+public enum TileAggregateType implements Serializable {
   COUNT,
   MAX,
   MIN,
