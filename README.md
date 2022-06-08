@@ -15,6 +15,7 @@ Currently, Glink supports the following features:
   + Spatial Window Join: spatial window join of two spatial data streams.
   + Spatial Interval Join: spatial interval join of two spatial data streams.
 + Spatial Window DBSCAN: perform DNSCAN cluster in the window snapshots of a spatial data stream.
++ Spatial Heatmap: convert unbounded spatial data streams into heatmaps that can be displayed on web pages.
 
 ## Examples
 
@@ -29,6 +30,7 @@ DataStream<Point> resultStream = SpatialFilter.filter(pointDataStream, ...);
 // DataStream<Point> resultStream = SpatialWindowKNN.knn(pointDataStream, ...)
 // DataStream<Point> resultStream = SpatialDimensionJoin.join(pointDataStream, otherGeometryStream, ...)
 // DataStream<Point> resultStream = WindowDBSCAN.dbscan(pointDataStream, ...)
+// DataStream<TileResult<Double>> heatmapStream = SpatialHeatMap.heatmap(pointDataStream, ...)
 resultStream.print();
 ```
 
