@@ -2,7 +2,7 @@ package cn.edu.whu.glink.lynnTest;
 
 import cn.edu.whu.glink.core.datastream.SpatialDataStream;
 import cn.edu.whu.glink.core.enums.TopologyType;
-import cn.edu.whu.glink.core.process.SpatialIntervalJoin_BinRtree;
+import cn.edu.whu.glink.core.process.SpatialIntervalJoinBinRtree1;
 import cn.edu.whu.glink.examples.utils.SimpleSTPointFlatMapper;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -43,7 +43,7 @@ public class SpatialIntervalJoinExampleLynn {
                         .assignBoundedOutOfOrdernessWatermarks(Duration.ZERO, 1);
 
 //        DataStream<Tuple2<Point, Point>> joinStream = SpatialIntervalJoinBinRtree.join(
-        DataStream<Tuple2<Point, Point>> joinStream = SpatialIntervalJoin_BinRtree.join(
+        DataStream<Tuple2<Point, Point>> joinStream = SpatialIntervalJoinBinRtree1.join(
                 pointSpatialDataStream1,
                 pointSpatialDataStream2,
                 TopologyType.WITHIN_DISTANCE.distance(1),

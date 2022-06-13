@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * @author Lynn Lee
  */
-public class SpatialIntervalJoin_BinRtree {
+public class SpatialIntervalJoinBinRtree1 {
 
     @SuppressWarnings("unchecked")
     public static <T1 extends Geometry, T2 extends Geometry> SingleOutputStreamOperator join(

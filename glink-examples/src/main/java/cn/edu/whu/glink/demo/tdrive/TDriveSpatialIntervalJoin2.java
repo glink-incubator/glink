@@ -4,7 +4,7 @@ import cn.edu.whu.glink.core.datastream.SpatialDataStream;
 import cn.edu.whu.glink.core.enums.TopologyType;
 import cn.edu.whu.glink.core.geom.Point2;
 import cn.edu.whu.glink.core.index.GeographicalGridIndex;
-import cn.edu.whu.glink.core.process.SpatialIntervalJoin_BinRtree;
+import cn.edu.whu.glink.core.process.SpatialIntervalJoinBinRtree1;
 import cn.edu.whu.glink.demo.tdrive.kafka.TDriveDeserializer;
 import cn.edu.whu.glink.demo.tdrive.kafka.TDriveJoinSerializer;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
@@ -57,7 +57,7 @@ public class TDriveSpatialIntervalJoin2 {
         SpatialDataStream<Point2> trajectoryStream2 = new SpatialDataStream<>(
                 env, kafkaConsumer);
 
-        DataStream<Tuple2<Point2, Point2>> joinStream = SpatialIntervalJoin_BinRtree.join(
+        DataStream<Tuple2<Point2, Point2>> joinStream = SpatialIntervalJoinBinRtree1.join(
                 trajectoryStream1,
                 trajectoryStream2,
                 TopologyType.WITHIN_DISTANCE.distance(distance),
