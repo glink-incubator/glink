@@ -48,7 +48,8 @@ public class SpatialIntervalJoinExampleLynn {
                 pointSpatialDataStream2,
                 TopologyType.WITHIN_DISTANCE.distance(1),
                 Time.seconds(-5),
-                Time.seconds(5), 20);
+                Time.seconds(5),
+                20);
         joinStream.print();
 
         env.execute("Glink Spatial Interval Join Example");

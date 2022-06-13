@@ -36,7 +36,7 @@ public class TDriveSpatialIntervalJoin1 {
         double distance = Double.parseDouble(parameterTool.get("distance"));
         int leftBound = Integer.parseInt(parameterTool.get("left.bound"));
         int rightBound = Integer.parseInt(parameterTool.get("right.bound"));
-//        int gridSplit = Integer.parseInt(parameterTool.get("grid.split"));
+
         Envelope beijingBound = new Envelope(115.41, 117.51, 39.44, 41.06);
 
         SpatialDataStream.gridIndex = new GeographicalGridIndex(beijingBound, 1, 1);
