@@ -1,12 +1,14 @@
 package cn.edu.whu.glink.core.process;
 
 import cn.edu.whu.glink.core.datastream.TileGridDataStream;
+import cn.edu.whu.glink.core.operator.grid.PixelGenerateMapper;
 import cn.edu.whu.glink.core.operator.grid.WindowAggeFunction;
 import cn.edu.whu.glink.core.tile.Pixel;
 import cn.edu.whu.glink.core.tile.TileResult;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.windowing.assigners.WindowAssigner;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.locationtech.jts.geom.Geometry;
@@ -60,5 +62,47 @@ public class SpatialHeatMap {
         windowAssigner,
         hLevel);
     return tileGridDataStream1.getAggregateDataStream();
+  }
+
+  public static <T extends Geometry, V, W extends TimeWindow> DataStream<TileResult<V>> incrementalHeatmap(
+      TileGridDataStream<T, V> tileGridDataStream,
+      WindowAssigner<? super Tuple3<Pixel, T, String>, W> windowAssigner,
+      int weightIndex,
+      int hLevel) {
+    return tileGridDataStream
+        .getTileWithIDDataStream()
+        .flatMap(new PixelGenerateMapper<>(tileGridDataStream.tileLevel, hLevel))
+        .keyBy(t -> t.f0.getTile())
+        .window(windowAssigner)
+        .aggregate(new WindowAggeFunction.WindowAggregateWithID<>(tileGridDataStream.getTileFlatMapType(),
+                tileGridDataStream.getSmoothOperator(), weightIndex),
+            new WindowAggeFunction.AddWindowTime<>());
+  }
+
+  public static <T extends Geometry, V, W extends TimeWindow> DataStream<TileResult<V>> middleHeatmap(
+      TileGridDataStream<T, V> tileGridDataStream,
+      WindowAssigner<? super Tuple3<Pixel, T, String>, W> windowAssigner,
+      int weightIndex,
+      int mLevel,
+      int hLevel) {
+    DataStream<TileResult<V>> tileResultDataStream = tileGridDataStream
+        .getTileWithIDDataStream()
+        .flatMap(new PixelGenerateMapper<>(tileGridDataStream.tileLevel, mLevel))
+        .keyBy(t -> t.f0.getTile())
+        .window(windowAssigner)
+        .aggregate(new WindowAggeFunction.WindowAggregateWithID<>(tileGridDataStream.getTileFlatMapType(),
+                tileGridDataStream.getSmoothOperator(), weightIndex),
+            new WindowAggeFunction.AddWindowTime<>());
+    DataStream<TileResult<V>> middleDataStream = tileResultDataStream.filter(t -> t.getTile().getLevel() == mLevel);
+    DataStream<TileResult<V>> lowDataStream = tileResultDataStream.filter(t -> t.getTile().getLevel() != mLevel);
+    TileGridDataStream<T, V> tileGridDataStream1 = new<W> TileGridDataStream(
+        mLevel,
+        tileGridDataStream.getTileFlatMapType(),
+        tileGridDataStream.getPyramidTileAggregateType(),
+        middleDataStream,
+        windowAssigner,
+        hLevel);
+//    tileGridDataStream1.getAggregateDataStream().print();
+    return lowDataStream.union(tileGridDataStream1.getAggregateDataStream());
   }
 }

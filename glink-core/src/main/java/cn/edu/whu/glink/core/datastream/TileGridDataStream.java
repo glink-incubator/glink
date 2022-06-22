@@ -283,9 +283,12 @@ public class TileGridDataStream<T extends Geometry, V> {
     if (tileDataStream != null) {
       tileDataStream
           .print();
-    } else {
+    } else if (tileWithIDDataStream != null) {
       tileWithIDDataStream
           .print();
+    } else {
+      aggregateDataStream.print();
     }
   }
+
 }

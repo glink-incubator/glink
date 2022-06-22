@@ -51,17 +51,17 @@ public class LatencyMetric {
     options.addOption("pointGroupId", "pg", true, "group id");
 
     CommandLine cliParser = new DefaultParser().parse(options, args);
-//    String bootstrapServer = cliParser.getOptionValue("bootstrapServer");
-//    String tileTopic = cliParser.getOptionValue("topic");
-//    String pointTopic = cliParser.getOptionValue("groupId");
-//    String tileGroupId = cliParser.getOptionValue("tileGroupId");
-//    String pointGroupId = cliParser.getOptionValue("pointGroupId");
+    String bootstrapServer = cliParser.getOptionValue("bootstrapServer");
+    String tileTopic = cliParser.getOptionValue("tileTopic");
+    String pointTopic = cliParser.getOptionValue("pointTopic");
+    String tileGroupId = cliParser.getOptionValue("tileGroupId");
+    String pointGroupId = cliParser.getOptionValue("pointGroupId");
 
-    String bootstrapServer = "172.21.184.80:9092";
-    String tileTopic = "nyc_throughput_out";
-    String pointTopic = "nyc_throughput_in";
-    String tileGroupId = "ntLdata";
-    String pointGroupId = "npLdata";
+//    String bootstrapServer = "172.27.199.80:9092";
+//    String tileTopic = "nyc_throughput_out";
+//    String pointTopic = "nyc_throughput_in";
+//    String tileGroupId = "ntLdata";
+//    String pointGroupId = "npLdata";
 
     final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
@@ -87,7 +87,7 @@ public class LatencyMetric {
 //    nycStream.getDataStream().map(new CountMapFunction()).print("map");
 //    nycStream.getDataStream().map((t) -> ((Tuple) t.f0.getUserData()).getField(2)).print();
     TileGridDataStream<Point, Double> pointTileGridDataStream = new TileGridDataStream<>(
-        nycStream, TileFlatMapType.SUM, 13
+        nycStream, TileFlatMapType.SUM, 12
     );
 
     // create tile kafka consumer source function

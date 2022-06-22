@@ -26,9 +26,9 @@ import java.util.Properties;
 /**
  * @author Xu Qi
  */
-public class NycHeatmap {
+public class NycTopHeatmap {
   public static void main(String[] args) throws Exception {
-//    String bootstrapServer = "172.27.199.80:9092";
+//    String bootstrapServer = "172.28.239.216:9092";
 //    String groupId = "cdata";
 //    String inputTopic = "nyc_throughput_in";
 //    String outputTopic = "nyc_throughput_out";
@@ -57,13 +57,13 @@ public class NycHeatmap {
                 (event, time) -> ((Tuple) event.f0.getUserData()).getField(1)));
 
     TileGridDataStream<Point, Double> pointTileGridDataStream = new TileGridDataStream<>(
-        nycStream, TileFlatMapType.SUM, 18
+        nycStream, TileFlatMapType.SUM, 12
     );
-    DataStream<TileResult<Double>> heatmapStream = SpatialHeatMap.heatmap(
+    DataStream<TileResult<Double>> heatmapStream = SpatialHeatMap.incrementalHeatmap(
         pointTileGridDataStream,
         TumblingEventTimeWindows.of(Time.seconds(windowSize)),
         -1,
-        12);
+        18);
 
     // sink
     FlinkKafkaProducer<TileResult<Double>> kafkaProducer = new FlinkKafkaProducer<>(

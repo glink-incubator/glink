@@ -1,6 +1,7 @@
 package cn.edu.whu.glink.connector.geomesa.sink;
 
 import org.apache.flink.annotation.PublicEvolving;
+import org.locationtech.jts.geom.Point;
 import org.opengis.feature.simple.SimpleFeature;
 
 import java.io.Serializable;

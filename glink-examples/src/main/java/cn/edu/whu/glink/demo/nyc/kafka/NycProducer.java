@@ -21,7 +21,7 @@ public class NycProducer {
   private String nycPath;
   private String topic;
   private String bootstrapServer;
-  private int sleepNanos = 100000;
+  private int sleepNanos = -1;
   private int pid = 0;
 
   public NycProducer() {
@@ -34,14 +34,14 @@ public class NycProducer {
 
   public void init(String[] args) throws ParseException {
     CommandLine cliParser = new DefaultParser().parse(options, args);
-//    threadNum = Integer.parseInt(cliParser.getOptionValue("threadNum"));
-//    nycPath = cliParser.getOptionValue("nycPath");
-//    topic = cliParser.getOptionValue("topic");
-//    bootstrapServer = cliParser.getOptionValue("bootstrapServer");
-    threadNum = 8;
-    nycPath = "F:\\github\\data\\nycdata.csv";
-    topic = "nyc_throughput_in";
-    bootstrapServer = "172.21.184.80:9092";
+    threadNum = Integer.parseInt(cliParser.getOptionValue("threadNum"));
+    nycPath = cliParser.getOptionValue("nycPath");
+    topic = cliParser.getOptionValue("topic");
+    bootstrapServer = cliParser.getOptionValue("bootstrapServer");
+//    threadNum = 8;
+//    nycPath = "F:\\github\\data\\NYC2009-1.csv";
+//    topic = "nyc_throughput_in";
+//    bootstrapServer = "172.27.199.80:9092";
     if (cliParser.getOptionValue("throughput") != null) {
       int throughput = Integer.parseInt(cliParser.getOptionValue("throughput"));
       sleepNanos = (int) 1e9 / throughput;

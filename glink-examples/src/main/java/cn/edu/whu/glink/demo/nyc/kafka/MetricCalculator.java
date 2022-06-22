@@ -25,18 +25,21 @@ public class MetricCalculator {
     options.addOption("tileTopic", "t", true, "The tile topic to read");
     options.addOption("pointTopic", "p", true, "The point topic to read");
     options.addOption("groupId", "g", true, "group id");
+    options.addOption("groupId2", "g2", true, "group id2");
 
     CommandLine cliParser = new DefaultParser().parse(options, args);
 
-//    String bootstrapServer = cliParser.getOptionValue("bootstrapServer");
-//    String topic = cliParser.getOptionValue("topic");
-//    String groupId = cliParser.getOptionValue("groupId");
+    String bootstrapServer = cliParser.getOptionValue("bootstrapServer");
+    String tileTopic = cliParser.getOptionValue("tileTopic");
+    String pointTopic = cliParser.getOptionValue("pointTopic");
+    String groupId = cliParser.getOptionValue("groupId");
+    String groupId2 = cliParser.getOptionValue("groupId2");
 
-    String bootstrapServer = "172.21.184.80:9092";
-    String tileTopic = "nyc_throughput_out";
-    String pointTopic = "nyc_throughput_in";
-    String groupId = "ntdata";
-    String groupId2 = "npdata";
+//    String bootstrapServer = "172.27.199.80:9092";
+//    String tileTopic = "nyc_throughput_out";
+//    String pointTopic = "nyc_throughput_in";
+//    String groupId = "ntdata";
+//    String groupId2 = "npdata";
 
     Properties props = new Properties();
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);

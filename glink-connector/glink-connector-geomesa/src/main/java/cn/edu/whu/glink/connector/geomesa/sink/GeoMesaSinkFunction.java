@@ -1,6 +1,7 @@
 package cn.edu.whu.glink.connector.geomesa.sink;
 
 import cn.edu.whu.glink.connector.geomesa.options.param.GeoMesaDataStoreParam;
+import cn.edu.whu.glink.connector.geomesa.util.AbstractGeoMesaTableSchema;
 import cn.edu.whu.glink.connector.geomesa.util.GeoMesaTableSchema;
 import org.apache.flink.annotation.Internal;
 import org.apache.flink.configuration.Configuration;
@@ -30,7 +31,8 @@ public class GeoMesaSinkFunction<T>
   private static final Logger LOG = LoggerFactory.getLogger(GeoMesaSinkFunction.class);
 
   private final GeoMesaDataStoreParam params;
-  private final GeoMesaTableSchema schema;
+  private GeoMesaTableSchema schema;
+  private AbstractGeoMesaTableSchema absSchema;
   private final GeoMesaSimpleFeatureConverter<T> geomesaSimpleFeatureConverter;
   private transient DataStore dataStore;
   private transient FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter;
@@ -42,6 +44,13 @@ public class GeoMesaSinkFunction<T>
     this.schema = schema;
     this.geomesaSimpleFeatureConverter = geomesaSimpleFeatureConverter;
   }
+  public GeoMesaSinkFunction(GeoMesaDataStoreParam params,
+                             AbstractGeoMesaTableSchema schema,
+                             GeoMesaSimpleFeatureConverter<T> geomesaSimpleFeatureConverter) {
+    this.params = params;
+    this.absSchema = schema;
+    this.geomesaSimpleFeatureConverter = geomesaSimpleFeatureConverter;
+  }
 
   @Override
   public void open(Configuration parameters) throws Exception {
@@ -51,7 +60,12 @@ public class GeoMesaSinkFunction<T>
       LOG.error("Could not create data store with provided parameters");
       throw new RuntimeException("Could not create data store with provided parameters.");
     }
-    SimpleFeatureType createSft = schema.getSchema();
+    SimpleFeatureType createSft;
+    if (schema != null) {
+       createSft = schema.getSchema();
+    } else {
+       createSft = absSchema.getSimpleFeatureType();
+    }
     String name = createSft.getTypeName();
     SimpleFeatureType existSft = dataStore.getSchema(name);
     if (existSft == null) {
